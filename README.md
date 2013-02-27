@@ -5,6 +5,14 @@ Package for working with Nucleotides and Amino Acids on Julia
 
 # Installation
 
+```
+Pkg.init() # Only the first time you install a Julia's Package
+
+Pkg.add("BioSeq") # Install BioSeq.jl
+
+using BioSeq # Starting to use BioSeq
+```
+
 # Features
 
 * 8-bit bitstype `Nucleotide` and `AminoAcid`
