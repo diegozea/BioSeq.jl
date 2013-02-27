@@ -1,6 +1,5 @@
 module BioSeq
 
-
   ## Dependencies ##
   using Base.Intrinsics
   import Base.interp_parse_bytes, Base.iround_to
