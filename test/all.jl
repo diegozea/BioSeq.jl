@@ -1,16 +1,14 @@
+using BioSeq
 using Test
 
 @test nt('A') == nt(65) == nt(0x41)
 @test aa('A') == aa(65) == aa(0x41)
 
-@test nt"AC" == nt([65; 67]) == [ nt('A'); nt('C') ]
-@test aa"AC" == aa([65; 67]) == [ aa('A'); aa('C') ]
+@test nt"AC" == ntseq([65; 67]) == [ nt('A'); nt('C') ]
+@test aa"AC" == aaseq([65; 67]) == [ aa('A'); aa('C') ]
 
-@test nt"ACTG" == nt("ACTG")
-@test aa"ACTG" == aa("ACTG")
-
-@test integer(nt('A')) == integer(aa('A')) == integer('A')
-@test unsigned(nt('A')) == unsigned(aa('A')) == unsigned('A')
+@test nt"ACTG" == ntseq("ACTG")
+@test aa"ACTG" == aaseq("ACTG")
 
 @test aa('A') + 32 == 32 + aa('A') == aa('a')
 @test nt('A') + 32 == 32 + nt('A') == nt('a')
@@ -24,8 +22,8 @@ seq = nt"TG"
 seq = aa"HM"
 @test aa"AC$seq" == aa"ACHM"
 
-@test nt"ACTG" == nt("ACTG") == ntseq("ACTG")
-@test aa"ACTG" == aa("ACTG") == aaseq("ACTG")
+@test nt"ACTG" == ntseq("ACTG")
+@test aa"ACTG" == aaseq("ACTG")
 
 seq   = nt"ACTG"
 seqII = nt"TGAC"

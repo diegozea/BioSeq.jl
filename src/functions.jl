@@ -86,7 +86,7 @@ complement(s::AbstractArray{Nucleotide},d::Dict) = swap(s,d)
 
 ## Reverse Complement ##
 
-function reversecomplement!{T<:Number}(s::AbstractArray{T},y::Dict{T,T})
+function reversecomplement!{T<:BioUnit}(s::AbstractArray{T},y::Dict{T,T})
   i=1
   j=length(s)
   while i<=j
@@ -100,4 +100,4 @@ function reversecomplement!{T<:Number}(s::AbstractArray{T},y::Dict{T,T})
   s
 end
 
-reversecomplement{T<:Number}(s::AbstractArray{T},y::Dict{T,T}) = reversecomplement!(copy(s),y)
+reversecomplement{T<:BioUnit}(s::AbstractArray{T},y::Dict{T,T}) = reversecomplement!(copy(s),y)

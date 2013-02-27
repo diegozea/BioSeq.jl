@@ -1,4 +1,4 @@
-abstract BioUnit
+abstract BioUnit                <: Integer
 
 bitstype 8 AminoAcid            <: BioUnit
 bitstype 8 Nucleotide           <: BioUnit
@@ -8,13 +8,17 @@ bitstype 8 Nucleotide           <: BioUnit
 convert{T<:BioUnit}(::Type{T}, value::Uint8) = box(T,unbox(Uint8,value));
 convert{T<:BioUnit}(::Type{Uint8}, value::T) = box(Uint8,unbox(T,value));
 
-convert{T<:BioUnit}(::Type{T}, value ) = convert(T,uint8( value ))
-convert{Tnum<:Number, Tbio<:BioUnit}(::Type{Tnum}, value::Tbio ) = convert(Tnum, uint8( value ))
+const _types = (Int8, Int16, Uint16, Int32, Uint32, Char, Int64, Uint64, Float32, Float64, Bool)
+
+for t in _types
+    @eval convert{T<:BioUnit}(::Type{$t}, x::T) = convert($t,uint8(x))
+    @eval convert{T<:BioUnit}(::Type{T},  x::$t)= convert(T,uint8(x))
+end
 
 ## Bits Type Conversions ##
 
-aa(value)   = convert(AminoAcid, value)
-nt(value)   = convert(Nucleotide,value)
+aa{T<:Number}(value::T)   = convert(AminoAcid, value)
+nt{T<:Number}(value::T)   = convert(Nucleotide,value)
 
 aaseq(vec)  = convert(Vector{AminoAcid}, vec)
 ntseq(vec)  = convert(Vector{Nucleotide},vec)
