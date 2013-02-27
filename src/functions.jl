@@ -81,23 +81,23 @@ rna2dna(s::AbstractArray{Nucleotide}) = rna2dna!(copy(s))
 
 ## Complement ##
 
-complement!(s::AbstractArray{Nucleotide},d::Dict) = swap!(s,d)
-complement(s::AbstractArray{Nucleotide},d::Dict) = swap(s,d)
+complement!(s::AbstractArray{Nucleotide},d) = swap!(s, d)
+complement(s::AbstractArray{Nucleotide},d) = swap(s,d)
 
 ## Reverse Complement ##
 
-function reversecomplement!{T<:BioUnit}(s::AbstractArray{T},y::Dict{T,T})
+function reversecomplement!{T<:BioUnit}(s::AbstractArray{T},y::Array{T})
   i=1
   j=length(s)
   while i<=j
     I=s[i]
     J=s[j]
-    s[i] = get(y,J,J)
-    s[j] = get(y,I,I)
+    s[i] = y[J]
+    s[j] = y[I]
     i += 1
     j -= 1
   end
   s
 end
 
-reversecomplement{T<:BioUnit}(s::AbstractArray{T},y::Dict{T,T}) = reversecomplement!(copy(s),y)
+reversecomplement{T<:BioUnit}(s::AbstractArray{T},y::Array{T}) = reversecomplement!(copy(s),y)
