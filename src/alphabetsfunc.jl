@@ -39,6 +39,9 @@ function swap{T,Tk,Tv}(s::AbstractArray{T},y::Dict{Tk,Tv})
   res
 end
 
+swap!{T<:Integer,Tv}(s::AbstractArray{T},y::Array{Tv}) = (for i in length(s) s[i] = y[s[i]] end)
+swap{T<:Integer,Tv}(s::AbstractArray{T},y::Array{Tv}) = [y[b] for b in s]
+
 swap(s::ASCIIString,y)= ASCIIString(convert(Vector{Uint8},swap(s.data,y)))
 
 ## TODO: rand
