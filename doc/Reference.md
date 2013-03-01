@@ -10,11 +10,6 @@ Types:
 	BioUnit
 
 Abstract type for creation of Biological Units of 8-bit
-* Conversion and promotion between types
-* Sum and subtraction of Int values
-* Comparisons
-* Bitwise operations
- 
 
 	Nucleotide
 
@@ -98,12 +93,12 @@ Convert to Nucleotide Matrix (Alignment)
 
 All this functions interchange between T and U and are case insensitive. If you know your sequence is all uppercase or all lowercase, `swap!(seq,'T','U')` or `swap!(seq,'t','u')` are faster choices.
 
-	complement!(x,d::Dict)
-	complement(x,d::Dict)
-	reversecomplement!(x,d::Dict)
-	reversecomplement(x,d::Dict)
+	complement!(x,d)
+	complement(x,d)
+	reversecomplement!(x,d)
+	reversecomplement(x,d)
 
-This functions give us the complement sequence or the reverse complement. d::Dict can be `RNA_COMPLEMENT` or `DNA_COMPLEMENT` or a user defined Dict.
+This functions give us the complement sequence or the reverse complement. d can be `RNA_COMPLEMENT` or `DNA_COMPLEMENT` or a user defined Array indexed with Nucleotides keys.
 
 Matching on BioUnit Vectors
 ----------------------------
@@ -160,6 +155,12 @@ Check for characters on an alphabet
 	swap!{T<:Number}(s::AbstractArray{T},y::Dict{T,T})
 
 Interchange a character for other on a Dict
+
+	swap{T,Tk,Tv}(s::AbstractArray{T},y::Array)
+	swap!{T<:Number}(s::AbstractArray{T},y::Array)
+
+Interchange a character for other on a Array (keys must be the indexes)
+
 
 Nucleotide Alphabets
 --------------------
