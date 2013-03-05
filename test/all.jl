@@ -4,11 +4,11 @@ using Test
 @test nt('A') == nt(65) == nt(0x41)
 @test aa('A') == aa(65) == aa(0x41)
 
-@test nt"AC" == ntseq([65; 67]) == [ nt('A'); nt('C') ]
-@test aa"AC" == aaseq([65; 67]) == [ aa('A'); aa('C') ]
+@test nt"AC" == nt([65; 67]) == [ nt('A'); nt('C') ]
+@test aa"AC" == aa([65; 67]) == [ aa('A'); aa('C') ]
 
-@test nt"ACTG" == ntseq("ACTG")
-@test aa"ACTG" == aaseq("ACTG")
+@test nt"ACTG" == nt("ACTG")
+@test aa"ACTG" == aa("ACTG")
 
 @test aa('A') + 32 == 32 + aa('A') == aa('a')
 @test nt('A') + 32 == 32 + nt('A') == nt('a')
@@ -22,13 +22,13 @@ seq = nt"TG"
 seq = aa"HM"
 @test aa"AC$seq" == aa"ACHM"
 
-@test nt"ACTG" == ntseq("ACTG")
-@test aa"ACTG" == aaseq("ACTG")
+@test nt"ACTG" == nt("ACTG")
+@test aa"ACTG" == aa("ACTG")
 
 seq   = nt"ACTG"
 seqII = nt"TGAC"
 
-@test [ seq', seqII' ] == [ seq seqII ]' == vcat( seq', seqII' ) == ntaln([ "ACTG".data', "TGAC".data' ])
+@test [ seq', seqII' ] == [ seq seqII ]' == vcat( seq', seqII' ) == nt([ "ACTG".data', "TGAC".data' ])
 
 @test nt"ACUG" == dna2rna(nt"ACTG")
 @test nt"ACTG" == rna2dna(nt"ACUG")
@@ -94,3 +94,23 @@ seqII = nt"TGAC"
 
 @test swap(nt"ACTG", DNA_COMPLEMENT) == nt"TGAC"
 @test swap(aa"MHAC", AMINO_1LETTER_TO_3) == [ "MET"; "HYS"; "ALA"; "CYS" ]
+
+## Test for DNA2Seq ##
+
+@test dna2"ACTG".b1 == [true, true, false, false]
+
+@test dna2"ACTG".b2 == [true, false, false, true]
+
+@test dna2"ACTG" == dna2seq("ACTG")
+
+@test dna2"ACTG"[2] == 'C'
+
+@test nt(DNA2Seq(10)) == nt"TTTTTTTTTT"
+
+@test length(DNA2Seq(10)[1:3])==3
+
+@test complement(dna2"ACTG") == dna2"TGAC"
+
+@test reversecomplement(dna2"ACTG") == dna2"CAGT"
+
+@test percentGC(dna2"AACC") == 0.5

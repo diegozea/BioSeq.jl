@@ -28,6 +28,7 @@ using BioSeq # Starting to use BioSeq
   * Test for characters on alphabet
   * Check for all characters on alphabet
   * Swap for alphabet conversions
+* 2-bit DNA sequence `DNA2Seq`
 
 # Demo
 
@@ -99,6 +100,19 @@ julia> swap!(seq,'T','U') # or dna2rna!(seq)
  A
  U
  C
+
+julia> seq2bit = dna2seq("ACTG") # Creates a DNA sequence of 2 bits
+([true, true, false, false],[true, false, false, true])
+
+julia> reversecomplement!(seq2bit)
+([true, true, false, false],[false, true, true, false])
+
+julia> nt(seq2bit) # Convert into Nucleotide Vector (8-bit Sequence)
+4-element Nucleotide Array:
+ G
+ T
+ C
+ A
 
 ```
 

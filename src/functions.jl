@@ -101,3 +101,28 @@ function reversecomplement!{T<:BioUnit}(s::AbstractArray{T},y::Array{T})
 end
 
 reversecomplement{T<:BioUnit}(s::AbstractArray{T},y::Array{T}) = reversecomplement!(copy(s),y)
+
+## percent of GC ##
+
+function percentGC(seq::ASCIIString)
+  len = length(seq)
+  sum = 0
+  for elem in seq
+    if elem | 32 == 'c' || elem | 32 == 'g'
+      sum += 1
+    end
+  end
+  sum/len
+end
+
+function percentGC(seq::Vector{Nucleotide})
+  len = length(seq)
+  sum = 0
+  for elem in seq
+    if elem | 32 == 'c' || elem | 32 == 'g'
+      sum += 1
+    end
+  end
+  sum/len
+end
+

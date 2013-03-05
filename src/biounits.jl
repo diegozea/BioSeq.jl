@@ -20,11 +20,14 @@ end
 aa{T<:Number}(value::T)   = convert(AminoAcid, value)
 nt{T<:Number}(value::T)   = convert(Nucleotide,value)
 
-aaseq(vec)  = convert(Vector{AminoAcid}, vec)
-ntseq(vec)  = convert(Vector{Nucleotide},vec)
+aa(vec::Vector)  = convert(Vector{AminoAcid}, vec)
+nt(vec::Vector)  = convert(Vector{Nucleotide},vec)
 
-aaaln(mat)  = convert(Matrix{AminoAcid}, mat)
-ntaln(mat)  = convert(Matrix{Nucleotide},mat)
+aa(str::ASCIIString)  = convert(Vector{AminoAcid}, str)
+nt(str::ASCIIString)  = convert(Vector{Nucleotide},str)
+
+aa(mat::Matrix)  = convert(Matrix{AminoAcid}, mat)
+nt(mat::Matrix)  = convert(Matrix{Nucleotide},mat)
 
 macro aa_str(s);   ex = interp_parse_bytes(s); :(reinterpret(AminoAcid, ($ex).data)); end
 

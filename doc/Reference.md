@@ -13,13 +13,24 @@ Abstract type for creation of Biological Units of 8-bit
 
 	Nucleotide
 
-Bits type for Nucleotides (ribo-and deoxyribonucleic acids) as a subtype for BioUnit.
+8-bit bits type for Nucleotides (ribo-and deoxyribonucleic acids) as a subtype for BioUnit.
 Vectors of Nucleotides can be used as DNA or RNA Sequences and Matrices as Alignments
 
 	AminoAcid
 
-Bits type for Amino Acids as a subtype of BioUnit
+8-bit bits type for Amino Acids as a subtype of BioUnit
 Vectors of Amino Acids can be used as Protein Sequences and Matrices as Alignments
+
+	DNA2Seq
+
+DNA Sequence of 2 bits, only for A C T G.
+Contains 2 `BitVector` named `b1` and `b2`:
+
+b1\b2 | false | true 
+--------|--------|-------
+**false** |   T   |  G
+**true**  |   C   |  A
+
 
 String-like behavior for BioUnit Arrays
 -----------------------------------------
@@ -48,43 +59,33 @@ AminoAcid
 ----------
 
 	aa(x)
-	aa(s::ASCIIString)
-	aa(x::AbstractArray)
+	aa(vec::Vector)
+	aa(str::ASCIIString)
+	aa(mat::Matrix)
 
-Converts to AminoAcid or AminoAcid Array
+Converts to Nucleotide or Nucleotide Array
+AminoAcid Vector for Protein Sequence and Matrix for Alignments
 
 	@aa_str
 
 Creates a AminoAcid Vector (Protein Sequence)
 
-	aaseq(x)
-
-Convert to AminoAcid Vector (Sequence)
-
-	aaaln(x)
-
-Convert to AminoAcid Matrix (Alignment)
 
 Nucleotide
 ----------
 
 	nt(x)
-	nt(s::ASCIIString)
-	nt(x::AbstractArray)
+	nt(vec::Vector)
+	nt(str::ASCIIString)
+	nt(mat::Matrix)
+	nt(seq::DNA2Seq)
 
 Converts to Nucleotide or Nucleotide Array
+Nucleotide Vector for DNA or RNA Sequence and Matrix for Alignments
 
 	@nt_str
 
 Creates a Nucleotide Vector (DNA or RNA Sequence)
-
-	ntseq(x)
-
-Convert to Nucleotide Vector (Sequence)
-
-	ntaln(x)
-
-Convert to Nucleotide Matrix (Alignment)
 
 	dna2rna!(x)
 	dna2rna(x)
@@ -99,6 +100,36 @@ All this functions interchange between T and U and are case insensitive. If you 
 	reversecomplement(x,d)
 
 This functions give us the complement sequence or the reverse complement. d can be `RNA_COMPLEMENT` or `DNA_COMPLEMENT` or a user defined Array indexed with Nucleotides keys.
+
+DNA2Seq
+-------
+
+	DNA2Seq(len::Int)
+
+Initialize a DNA2Seq with Thymines of length len
+
+	dna2seq(x)
+
+Converts to DNA2Seq
+
+	dna2"..."
+
+Creates a 2-bit DNA sequence
+
+	nt(seq::DNA2Seq)
+
+Converts from DNA2Seq to Nucleotide Vector
+
+	complement!(seq::DNA2Seq)
+	complement(seq::DNA2Seq)
+	reversecomplement!(seq::DNA2Seq)
+	reversecomplement(seq::DNA2Seq)
+
+This functions give us the complement sequence or the reverse complement for a 2-bit DNA sequence.
+
+	percentGC(seq::DNA2Seq)
+
+Fastest GC content estimation for 2-bit DNA sequence
 
 Matching on BioUnit Vectors
 ----------------------------

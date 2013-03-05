@@ -3,7 +3,7 @@ module BioSeq
 
   ## Dependencies ##
   using Base.Intrinsics
-  import Base.interp_parse_bytes, Base.iround_to
+  import Base.interp_parse_bytes
   
   # import Base.convert, Base.show
   importall Base
@@ -18,8 +18,6 @@ module BioSeq
 	check,
 	Nucleotide, ## For Nucleotides
 	nt,
-	ntseq,
-	ntaln,
 	@nt_str,
 	@ntr_str,
 	dna2rna!,
@@ -44,8 +42,6 @@ module BioSeq
 	NUCLEIC_IUPAC_AMBIGUOUS,
 	AminoAcid, ## For Amino Acids
 	aa,
-	aaseq,
-	aaaln,
 	@aa_str,
 	@aar_str,
 	AMINO_20,
@@ -54,7 +50,11 @@ module BioSeq
 	AMINO_IUPAC_EXTENDED,
 	AMINO_1LETTER_TO_3,
 	AMINO_3LETTERS_TO_1,
-	IUPAC_AMINO_EXTENDED
+	IUPAC_AMINO_EXTENDED.
+	DNA2Seq, ## 2-bit DNA
+	percentGC,
+	dna2seq,
+	@dna2_str
 
   ## Load files ##
   include(Pkg.dir("BioSeq", "src", "biounits.jl"))
@@ -62,4 +62,5 @@ module BioSeq
   include(Pkg.dir("BioSeq", "src", "alphabetsfunc.jl"))
   include(Pkg.dir("BioSeq", "src", "alphabets.jl"))
   include(Pkg.dir("BioSeq", "src", "functions.jl"))
+  include(Pkg.dir("BioSeq", "src", "dna2.jl"))
 end
