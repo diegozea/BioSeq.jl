@@ -68,7 +68,7 @@ AminoAcid Vector for Protein Sequence and Matrix for Alignments
 
 	@aa_str
 
-Creates a AminoAcid Vector (Protein Sequence)
+Creates a AminoAcid Vector (Protein Sequence) using aa" ... "
 
 
 Nucleotide
@@ -85,7 +85,7 @@ Nucleotide Vector for DNA or RNA Sequence and Matrix for Alignments
 
 	@nt_str
 
-Creates a Nucleotide Vector (DNA or RNA Sequence)
+Creates a Nucleotide Vector (DNA or RNA Sequence) using nt" ... "
 
 	dna2rna!(x)
 	dna2rna(x)
@@ -112,9 +112,9 @@ Initialize a DNA2Seq with Thymines of length len
 
 Converts to DNA2Seq
 
-	dna2"..."
+	@dna2_str
 
-Creates a 2-bit DNA sequence
+Creates a 2-bit DNA sequence using dna2" ... "
 
 	nt(seq::DNA2Seq)
 
