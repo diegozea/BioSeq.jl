@@ -3,6 +3,7 @@ module BioSeq
 
   ## Dependencies ##
   using Base.Intrinsics
+  import Base.interp_parse_bytes
   
   # import Base.convert, Base.show
   importall Base
