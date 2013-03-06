@@ -119,3 +119,43 @@ function assign(s::DNA2Seq,x,val...)
   assign(s.b2,inseq.b2,val...)
 end
 
+isempty(s::DNA2Seq) = length(s) == 0
+
+function show(io::IO,seq::DNA2Seq)
+  len = length(seq)
+  print(len)
+  println(" bp DNA2Seq:")
+  if len > 0
+    screen = tty_rows() > 6 ? tty_rows() - 5 : tty_rows()
+    if length(seq) <= screen
+      print(" ")
+      print(char(seq[1]))
+      if(len>1)
+	for i in 2:len
+	  print("\n")
+	  print(" ")
+	  print(char(seq[i]))
+	end
+      end
+    else
+      partlen = int((screen)/2) - 1
+      for i in 1:partlen
+	print(" ")
+	println(char(seq[i]))
+      end
+      print(" \u22ee")
+      for i in (len-partlen):len
+	print("\n")
+	print(" ")
+	print(char(seq[i]))
+      end
+    end
+  end
+end
+
+function write(io::IO,seq::DNA2Seq)
+  for bp in seq
+    write(io,char(bp))
+  end
+end
+
