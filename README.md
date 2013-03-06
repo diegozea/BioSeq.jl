@@ -102,10 +102,18 @@ julia> swap!(seq,'T','U') # or dna2rna!(seq)
  C
 
 julia> seq2bit = dna2seq("ACTG") # Creates a DNA sequence of 2 bits
-([true, true, false, false],[true, false, false, true])
+4 bp DNA2Seq:
+ A
+ C
+ T
+ G
 
 julia> reversecomplement!(seq2bit)
-([true, true, false, false],[false, true, true, false])
+4 bp DNA2Seq:
+ C
+ A
+ G
+ T
 
 julia> nt(seq2bit) # Convert into Nucleotide Vector (8-bit Sequence)
 4-element Nucleotide Array:
