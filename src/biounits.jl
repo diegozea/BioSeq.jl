@@ -29,48 +29,9 @@ nt(str::ASCIIString)  = convert(Vector{Nucleotide},str)
 aa(mat::Matrix)  = convert(Matrix{AminoAcid}, mat)
 nt(mat::Matrix)  = convert(Matrix{Nucleotide},mat)
 
-function interp_parse(s::String, unescape::Function, printer::Function)
-  sx = {}
-    i = j = start(s)
-    while !done(s,j)
-        c, k = next(s,j)
-        if c == '$'
-            if !isempty(s[i:j-1])
-                push!(sx, unescape(s[i:j-1]))
-            end
-            ex, j = parse(s,k,false)
-            if isa(ex,Expr) && is(ex.head,:continue)
-                throw(ParseError("incomplete expression"))
-            end
-            push!(sx, esc(ex))
-            i = j
-        elseif c == '\\' && !done(s,k)
-            if s[k] == '$'
-                if !isempty(s[i:j-1])
-                    push!(sx, unescape(s[i:j-1]))
-                end
-                i = k
-            end
-            c, j = next(s,k)
-        else
-            j = k
-        end
-    end
-    if !isempty(s[i:])
-        push!(sx, unescape(s[i:j-1]))
-    end
-    length(sx) == 1 && isa(sx[1],ByteString) ? sx[1] :
-        Expr(:call, :sprint, printer, sx...)
-end
+macro aa_str(s);  :(reinterpret(AminoAcid,  @b_str($s) )); end
 
-function interp_parse_bytes(s::String)
-    writer(io,x...) = for w=x; write(io,w); end
-    interp_parse(s, unescape_string, writer)
-end
-
-macro aa_str(s);   ex = interp_parse_bytes(s); :(reinterpret(AminoAcid, ($ex).data)); end
-
-macro nt_str(s);   ex = interp_parse_bytes(s); :(reinterpret(Nucleotide,($ex).data)); end
+macro nt_str(s);  :(reinterpret(Nucleotide, @b_str($s) )); end
 
 ## Promotion rules ##
 

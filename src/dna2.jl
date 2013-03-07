@@ -82,36 +82,9 @@ function convert{T<:Integer}(::Type{DNA2Seq},s::T)
   DNA2Seq(_b1_bool_convert[_ind_convert[s]],_b2_bool_convert[_ind_convert[s]])
 end
 
-complement!(seq::DNA2Seq) = DNA2Seq(~seq.b1,~seq.b2)
-complement(seq::DNA2Seq) = DNA2Seq(~copy(seq.b1),~copy(seq.b2))
-
-reversecomplement!(seq::DNA2Seq) = DNA2Seq(~reverse!(seq.b1),~reverse!(seq.b2))
-reversecomplement(seq::DNA2Seq) = DNA2Seq(~reverse!(copy(seq.b1)),~reverse!(copy(seq.b2)))
-
-function percentGC(seq::DNA2Seq)
-  len = length(seq)
-  sum = 0
-  for i in 1:len
-    if seq.b1[i] != seq.b2[i]
-      sum += 1
-    end
-  end
-  sum/len
-end
-
 start(s::DNA2Seq) = 1
 next(s::DNA2Seq,i) = (s[i],i+1)
 done(s::DNA2Seq,i) = (i > length(s))
-
-dna2seq(x) = convert(DNA2Seq,x)
-macro dna2_str(s);   ex = interp_parse_bytes(s); :(dna2seq(($ex).data)); end
-
-convert(::Type{ASCIIString}, seq::DNA2Seq) = ASCIIString(convert(Vector{Uint8},seq))
-convert(::Type{DNA2Seq}, str::ASCIIString) = dna2seq(str.data)
-
-bytestring(seq::DNA2Seq) = bytestring(convert(Vector{Uint8},seq))
-
-nt(seq::DNA2Seq)  = convert(Vector{Nucleotide},seq)
 
 function assign(s::DNA2Seq,x,val...)
   inseq = convert(DNA2Seq,x)
@@ -159,3 +132,33 @@ function write(io::IO,seq::DNA2Seq)
   end
 end
 
+dna2seq(x) = convert(DNA2Seq,x)
+
+macro dna2_str(s);  :(dna2seq(@b_str($s))); end
+
+convert(::Type{ASCIIString}, seq::DNA2Seq) = ASCIIString(convert(Vector{Uint8},seq))
+convert(::Type{DNA2Seq}, str::ASCIIString) = dna2seq(str.data)
+
+bytestring(seq::DNA2Seq) = bytestring(convert(Vector{Uint8},seq))
+
+nt(seq::DNA2Seq)  = convert(Vector{Nucleotide},seq)
+
+complement!(seq::DNA2Seq) = DNA2Seq(~seq.b1,~seq.b2)
+complement(seq::DNA2Seq) = DNA2Seq(~copy(seq.b1),~copy(seq.b2))
+
+reversecomplement!(seq::DNA2Seq) = DNA2Seq(~reverse!(seq.b1),~reverse!(seq.b2))
+reversecomplement(seq::DNA2Seq) = DNA2Seq(~reverse!(copy(seq.b1)),~reverse!(copy(seq.b2)))
+
+## Faster using bit level parallelism:
+
+function percentGC(seq::DNA2Seq)
+  len = length(seq)
+  chunks_len = length(seq.b1.chunks)
+  sum_ones = 0
+  c1 = seq.b1.chunks
+  c2 = seq.b2.chunks
+  for i in 1:chunks_len
+    sum_ones += count_ones(c1[i] $ c2[i])
+  end
+  sum_ones/len
+end
