@@ -68,7 +68,7 @@ AminoAcid Vector for Protein Sequence and Matrix for Alignments
 
 	@aa_str
 
-Creates a AminoAcid Vector (Protein Sequence) using aa" ... "
+Creates a AminoAcid Vector (Protein Sequence) using aa" ... " (but string interpolation is only supported for Julia 0.1)
 
 
 Nucleotide
@@ -85,7 +85,7 @@ Nucleotide Vector for DNA or RNA Sequence and Matrix for Alignments
 
 	@nt_str
 
-Creates a Nucleotide Vector (DNA or RNA Sequence) using nt" ... "
+Creates a Nucleotide Vector (DNA or RNA Sequence) using nt" ... " (but string interpolation is only supported for Julia 0.1)
 
 	dna2rna!(x)
 	dna2rna(x)

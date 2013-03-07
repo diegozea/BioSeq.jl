@@ -1,5 +1,6 @@
 BioSeq.jl
 =========
+Version 0.0.0
 
 Package for working with Nucleotides and Amino Acids on Julia
 
@@ -15,6 +16,7 @@ using BioSeq # Starting to use BioSeq
 
 # Features
 
+* 2-bit DNA sequence `DNA2Seq`
 * 8-bit bitstype `Nucleotide` and `AminoAcid`
   * Vectors of this types can be used as DNA, RNA or Protein Sequences
     * Some string's functions working for Sequences:
@@ -28,7 +30,6 @@ using BioSeq # Starting to use BioSeq
   * Test for characters on alphabet
   * Check for all characters on alphabet
   * Swap for alphabet conversions
-* 2-bit DNA sequence `DNA2Seq`
 
 # Demo
 
