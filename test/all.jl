@@ -16,11 +16,12 @@ using Test
 @test aa('a') - 32 == -32 + aa('a') == aa('A')
 @test aa('a') - 32 == -32 + aa('a') == aa('A')
 
-seq = nt"TG"
-@test nt"AC$seq" == nt"ACTG"
-
-seq = aa"HM"
-@test aa"AC$seq" == aa"ACHM"
+# # but string interpolation is only supported for Julia 0.1
+# seq = nt"TG"
+# @test nt"AC$seq" == nt"ACTG"
+# 
+# seq = aa"HM"
+# @test aa"AC$seq" == aa"ACHM"
 
 @test nt"ACTG" == nt("ACTG")
 @test aa"ACTG" == aa("ACTG")
@@ -114,3 +115,13 @@ seqII = nt"TGAC"
 @test reversecomplement(dna2"ACTG") == dna2"CAGT"
 
 @test percentGC(dna2"AACC") == 0.5
+
+seq = dna2"ACTG"
+ntseq = nt(seq)
+@test isadenine(seq) == (ntseq .== 'A')
+@test iscytosine(seq) == (ntseq .== 'C')
+@test isthymine(seq) == (ntseq .== 'T')
+@test isguanine(seq) == (ntseq .== 'G')
+@test isweak(seq) == ((ntseq .== 'A') | (ntseq .== 'T'))
+@test isstrong(seq) == ((ntseq .== 'C') | (ntseq .== 'G'))
+

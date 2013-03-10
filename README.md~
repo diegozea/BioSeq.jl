@@ -16,8 +16,7 @@ using BioSeq # Starting to use BioSeq
 
 # Features
 
-* 2-bit DNA sequence `DNA2Seq` for saving memory
-  * Faster vectorized test for calculate percentage of GC, and test A C T G on `DNA2Seq`
+* 2-bit DNA sequence `DNA2Seq`
 * 8-bit bitstype `Nucleotide` and `AminoAcid`
   * Vectors of this types can be used as DNA, RNA or Protein Sequences
     * Some string's functions working for Sequences:

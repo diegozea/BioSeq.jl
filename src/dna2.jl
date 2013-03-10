@@ -151,6 +151,23 @@ reversecomplement(seq::DNA2Seq) = DNA2Seq(~reverse!(copy(seq.b1)),~reverse!(copy
 
 ## Faster using bit level parallelism:
 
+##	A	C	T	G
+## b1	1	1	0	0
+## b2	1	0	0	1
+
+## A: b1 & b2
+isadenine(seq::DNA2Seq)  = seq.b1 & seq.b2
+## G: ~b1 & b2
+isguanine(seq::DNA2Seq)  = ~seq.b1 & seq.b2
+## C: ~b2 & b1
+iscytosine(seq::DNA2Seq) = ~seq.b2 & seq.b1
+## T: ~b1 & ~b2
+isthymine(seq::DNA2Seq)  = ~seq.b1 & ~seq.b2
+## AT: ~b2 $ b1
+isweak(seq::DNA2Seq)     = seq.b1 $ ~seq.b2
+## CG: b1 $ b2
+isstrong(seq::DNA2Seq)   = seq.b1 $ seq.b2
+
 function percentGC(seq::DNA2Seq)
   len = length(seq)
   chunks_len = length(seq.b1.chunks)
@@ -162,3 +179,5 @@ function percentGC(seq::DNA2Seq)
   end
   sum_ones/len
 end
+
+

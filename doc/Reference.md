@@ -114,7 +114,7 @@ Converts to DNA2Seq
 
 	@dna2_str
 
-Creates a 2-bit DNA sequence using dna2" ... "
+Creates a 2-bit DNA sequence using dna2" ... " (but string interpolation is only supported for Julia 0.1)
 
 	nt(seq::DNA2Seq)
 
@@ -130,6 +130,15 @@ This functions give us the complement sequence or the reverse complement for a 2
 	percentGC(seq::DNA2Seq)
 
 Fastest GC content estimation for 2-bit DNA sequence
+
+	isadenine(seq::DNA2Seq)
+	iscytosine(seq::DNA2Seq)
+	isthymine(seq::DNA2Seq)
+	isguanine(seq::DNA2Seq)
+	isweak(seq::DNA2Seq)
+	isstrong(seq::DNA2Seq)
+
+Faster vectorize functions for test A, C, T, G, AT and CG respectively
 
 Matching on BioUnit Vectors
 ----------------------------

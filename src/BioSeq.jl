@@ -53,8 +53,15 @@ module BioSeq
 	DNA2Seq, ## 2-bit DNA
 	percentGC,
 	dna2seq,
-	@dna2_str
-
+	@dna2_str,
+	isadenine,
+	iscytosine,
+	isthymine,
+	isguanine,
+	isweak,
+	isstrong
+	
+	
   ## Load files ##
   include(Pkg.dir("BioSeq", "src", "biounits.jl"))
   include(Pkg.dir("BioSeq", "src", "stringlike.jl"))
