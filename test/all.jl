@@ -1,20 +1,20 @@
 using BioSeq
 using Test
 
-@test nt('A') == nt(65) == nt(0x41)
-@test aa('A') == aa(65) == aa(0x41)
+@test nucleotide('A') == nucleotide(65) == nucleotide(0x41)
+@test aminoacid('A') == aminoacid(65) == aminoacid(0x41)
 
-@test nt"AC" == nt([65; 67]) == [ nt('A'); nt('C') ]
-@test aa"AC" == aa([65; 67]) == [ aa('A'); aa('C') ]
+@test nt"AC" == nucleotide([65; 67]) == [ nucleotide('A'); nucleotide('C') ]
+@test aa"AC" == aminoacid([65; 67]) == [ aminoacid('A'); aminoacid('C') ]
 
-@test nt"ACTG" == nt("ACTG")
-@test aa"ACTG" == aa("ACTG")
+@test nt"ACTG" == nucleotide("ACTG")
+@test aa"ACTG" == aminoacid("ACTG")
 
-@test aa('A') + 32 == 32 + aa('A') == aa('a')
-@test nt('A') + 32 == 32 + nt('A') == nt('a')
+@test aminoacid('A') + 32 == 32 + aminoacid('A') == aminoacid('a')
+@test nucleotide('A') + 32 == 32 + nucleotide('A') == nucleotide('a')
 
-@test aa('a') - 32 == -32 + aa('a') == aa('A')
-@test aa('a') - 32 == -32 + aa('a') == aa('A')
+@test aminoacid('a') - 32 == -32 + aminoacid('a') == aminoacid('A')
+@test nucleotide('a') - 32 == -32 + nucleotide('a') == nucleotide('A')
 
 # # but string interpolation is only supported for Julia 0.1
 # seq = nt"TG"
@@ -23,13 +23,13 @@ using Test
 # seq = aa"HM"
 # @test aa"AC$seq" == aa"ACHM"
 
-@test nt"ACTG" == nt("ACTG")
-@test aa"ACTG" == aa("ACTG")
+@test nt"ACTG" == nucleotide("ACTG")
+@test aa"ACTG" == aminoacid("ACTG")
 
 seq   = nt"ACTG"
 seqII = nt"TGAC"
 
-@test [ seq', seqII' ] == [ seq seqII ]' == vcat( seq', seqII' ) == nt([ "ACTG".data', "TGAC".data' ])
+@test [ seq', seqII' ] == [ seq seqII ]' == vcat( seq', seqII' ) == nucleotide([ "ACTG".data', "TGAC".data' ])
 
 @test nt"ACUG" == dna2rna(nt"ACTG")
 @test nt"ACTG" == rna2dna(nt"ACUG")
@@ -46,11 +46,11 @@ seqII = nt"TGAC"
 @test aa"ACMH" == uppercase(aa"ACmh")
 @test nt"ACTG" == uppercase(nt"ACtg")
 
-@test aa('A') == uppercase(aa('a'))
-@test nt('A') == uppercase(nt('a'))
+@test aminoacid('A') == uppercase(aminoacid('a'))
+@test nucleotide('A') == uppercase(nucleotide('a'))
 
-@test aa('a') == lowercase(aa('A'))
-@test nt('a') == lowercase(nt('A'))
+@test aminoacid('a') == lowercase(aminoacid('A'))
+@test nucleotide('a') == lowercase(nucleotide('A'))
 
 @test ismatch(aar"X",aa"ACMH") == true
 @test ismatch(ntr"N",nt"ACTG") == true
@@ -98,15 +98,19 @@ seqII = nt"TGAC"
 
 ## Test for DNA2Seq ##
 
-@test dna2"ACTG".b1 == [true, true, false, false]
+##	A	C	T	G
+## b1	0	0	1	1
+## b2	0	1	0	1
 
-@test dna2"ACTG".b2 == [true, false, false, true]
+@test dna2"ACTG".b1 == [false, false, true, true]
 
-@test dna2"ACTG" == dna2seq("ACTG")
+@test dna2"ACTG".b2 == [false, true, false, true]
+
+@test dna2"ACTG" == dna2("ACTG")
 
 @test dna2"ACTG"[2] == 'C'
 
-@test nt(DNA2Seq(10)) == nt"TTTTTTTTTT"
+@test nucleotide(DNA2Seq(10)) == nt"AAAAAAAAAA"
 
 @test length(DNA2Seq(10)[1:3])==3
 
@@ -117,11 +121,14 @@ seqII = nt"TGAC"
 @test percentGC(dna2"AACC") == 0.5
 
 seq = dna2"ACTG"
-ntseq = nt(seq)
+ntseq = nucleotide(seq)
 @test isadenine(seq) == (ntseq .== 'A')
 @test iscytosine(seq) == (ntseq .== 'C')
 @test isthymine(seq) == (ntseq .== 'T')
 @test isguanine(seq) == (ntseq .== 'G')
 @test isweak(seq) == ((ntseq .== 'A') | (ntseq .== 'T'))
 @test isstrong(seq) == ((ntseq .== 'C') | (ntseq .== 'G'))
+@test ispyrimidine(seq) == ((ntseq .== 'C') | (ntseq .== 'T'))
+@test ispurine(seq) == ((ntseq .== 'A') | (ntseq .== 'G'))
+
 

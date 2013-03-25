@@ -17,6 +17,7 @@ module BioSeq
 	check,
 	Nucleotide, ## For Nucleotides
 	nt,
+	nucleotide,
 	@nt_str,
 	@ntr_str,
 	dna2rna!,
@@ -41,6 +42,7 @@ module BioSeq
 	NUCLEIC_IUPAC_AMBIGUOUS,
 	AminoAcid, ## For Amino Acids
 	aa,
+	aminoacid,
 	@aa_str,
 	@aar_str,
 	AMINO_20,
@@ -51,15 +53,19 @@ module BioSeq
 	AMINO_3LETTERS_TO_1,
 	IUPAC_AMINO_EXTENDED,
 	DNA2Seq, ## 2-bit DNA
+	DNA2Base,
+	DNA2,
 	percentGC,
-	dna2seq,
+	dna2,
 	@dna2_str,
 	isadenine,
 	iscytosine,
 	isthymine,
 	isguanine,
 	isweak,
-	isstrong
+	isstrong,
+	ispyrimidine,
+	ispurine
 	
 	
   ## Load files ##

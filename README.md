@@ -117,7 +117,7 @@ julia> reversecomplement!(seq2bit)
  G
  T
 
-julia> nt(seq2bit) # Convert into Nucleotide Vector (8-bit Sequence)
+julia> nucleotide(seq2bit) # Convert into Nucleotide Vector (8-bit Sequence)
 4-element Nucleotide Array:
  G
  T

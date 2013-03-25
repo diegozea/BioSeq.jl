@@ -1,98 +1,124 @@
-type DNA2Seq
+abstract DNA2
+
+## 2-bit DNA Seq Type ##
+
+type DNA2Seq <: DNA2
   b1::BitVector
   b2::BitVector
   DNA2Seq(b1::BitVector,b2::BitVector) = new(b1,b2)
 end
 
-DNA2Seq(len::Int) = DNA2Seq(falses(len),falses(len))
+DNA2Seq(len::Int) = DNA2Seq(BitArray(len),BitArray(len))
 
-function DNA2Seq(b1::Bool,b2::Bool)
-  bitvec1 = b1 ? trues(1) : falses(1)
-  bitvec2 = b2 ? trues(1) : falses(1)
-  DNA2Seq(bitvec1,bitvec2)
+## DNA2Base Type ##
+
+type DNA2Base <: DNA2
+  b1::Bool
+  b2::Bool
+  DNA2Base(b1::Bool,b2::Bool) = new(b1,b2)
 end
 
-show(io::IO,s::DNA2Seq) = show(io,(s.b1,s.b2)) ## Make it better
+## Selection ##
+
+ref(s::DNA2Seq,ind::Int)  = DNA2Base(ref(s.b1,ind),ref(s.b2,ind))
+
+ref(s::DNA2Seq,ind...)    = DNA2Seq(ref(s.b1,ind...),ref(s.b2,ind...))
+
+## Assignation ##
+
+function assign(s::DNA2Seq,x::DNA2Base,ind...)
+  assign(s.b1,x.b1,ind...)
+  assign(s.b2,x.b2,ind...)
+end
+
+function assign(s::DNA2Seq,x,ind...)
+  inseq = convert(DNA2Base,x)
+  assign(s.b1,inseq.b1,ind...)
+  assign(s.b2,inseq.b2,ind...)
+end
+
+## Copy ##
+
+copy(seq::DNA2Seq) = DNA2Seq(copy(seq.b1),copy(seq.b2))
+
+## length ##
 
 length(s::DNA2Seq) = length(s.b1)
 
-ref(s::DNA2Seq,ind::Int)  = DNA2Seq(ref(s.b1,ind),ref(s.b2,ind))
-ref(s::DNA2Seq,ind...)    = DNA2Seq(ref(s.b1,ind...),ref(s.b2,ind...))
+## Convertions ##
 
-isequal(S1::DNA2Seq, S2::DNA2Seq) = isequal(S1.b1,S2.b1) && isequal(S1.b2,S2.b2)
+##	A	C	T	G
+## b1	0	0	1	1
+## b2	0	1	0	1
 
-promote_rule{T<:Integer}(::Type{DNA2Seq}, ::Type{T} ) = T
-promote_rule{T<:Integer}(::Type{T}, ::Type{DNA2Seq} ) = T
-
-isequal{T<:Integer}(S1::DNA2Seq, S2::T) = isequal(promote(S1,S2)...)
-isequal{T<:Integer}(S1::T, S2::DNA2Seq) = isequal(promote(S1,S2)...)
-
-const _convert_mat = ['T' 'G'; 'C' 'A']
+const _convert_to_char = ['A' 'C';'T' 'G']
 
 function convert{T<:Integer}(::Type{Array{T,1}},s::DNA2Seq)
   len = length(s)
   out = Array(T,len)
   for i in 1:len
-    out[i] = _convert_mat[s.b1[i]+1,s.b2[i]+1]
+    out[i] = _convert_to_char[s.b1[i]+1,s.b2[i]+1]
   end
   out
 end
 
-function convert{T<:Integer}(::Type{T},s::DNA2Seq)
-  if length(s) == 1
-    return(convert(T,_convert_mat[s.b1[1]+1,s.b2[1]+1]))
-  else
-    throw(BoundsError())
-  end
+function convert{T<:Integer}(::Type{T},s::DNA2Base)
+    convert(T,_convert_to_char[s.b1+1,s.b2+1])
 end
 
-const _ind_convert = zeros(Int,128)
-_ind_convert['A'] = 1
-_ind_convert['a'] = 1
-_ind_convert['C'] = 2
-_ind_convert['c'] = 2
-_ind_convert['G'] = 3
-_ind_convert['g'] = 3
-_ind_convert['T'] = 4
-_ind_convert['t'] = 4
+const _convert_to_base2 = Array(DNA2Base,7)
 
-const _b1_bool_convert = zeros(Bool,4)
-const _b2_bool_convert = zeros(Bool,4)
-_b1_bool_convert[1] = true
-_b2_bool_convert[1] = true
-_b1_bool_convert[2] = true
-_b2_bool_convert[3] = true
+_convert_to_base2[1] = DNA2Base(false,false)
+_convert_to_base2[3] = DNA2Base(false,true)
+_convert_to_base2[4] = DNA2Base(true,false)
+_convert_to_base2[7] = DNA2Base(true,true)
 
 function convert{T<:Integer}(::Type{DNA2Seq},s::Vector{T})
-  len::Int = length(s)
-  b1 = falses(len)
-  b2 = falses(len)
+  len = length(s)
+  seq = DNA2Seq(len)
   for i in 1:len
-    j::Int = s[i]
-    if j | 32 != 116 # 't'
-      j = _ind_convert[j]
-      b1[i] = _b1_bool_convert[j]
-      b2[i] = _b2_bool_convert[j]
-    end
+    seq[i] = _convert_to_base2[s[i] & 7]
   end
-  DNA2Seq(b1,b2)
+  seq
 end
 
-function convert{T<:Integer}(::Type{DNA2Seq},s::T)
-  DNA2Seq(_b1_bool_convert[_ind_convert[s]],_b2_bool_convert[_ind_convert[s]])
+function convert{T<:Integer}(::Type{DNA2Base},s::T)
+  _convert_to_base2[s & 7]
 end
+
+dna2{T<:Integer}(x::Vector{T}) = convert(DNA2Seq,x)
+dna2{T<:Integer}(x::T) = convert(DNA2Base,x)
+
+macro dna2_str(s);  :(dna2(@b_str($s))); end
+
+convert(::Type{ASCIIString}, seq::DNA2Seq) = ASCIIString(convert(Vector{Uint8},seq))
+convert(::Type{DNA2Seq}, str::ASCIIString) = dna2(str.data)
+
+bytestring(seq::DNA2Seq) = bytestring(convert(Vector{Uint8},seq))
+
+dna2(x::ASCIIString) = convert(DNA2Seq,x)
+
+nucleotide(seq::DNA2Seq)  = convert(Vector{Nucleotide},seq)
+
+## == ##
+
+promote_rule{T<:Integer,B<:DNA2}(::Type{B}, ::Type{T} ) = T
+promote_rule{T<:Integer,B<:DNA2}(::Type{T}, ::Type{B} ) = T
+
+isequal{T<:DNA2}(S1::T, S2::T) = isequal(S1.b1,S2.b1) && isequal(S1.b2,S2.b2)
+
+isequal{T<:Integer,B<:DNA2}(S1::B, S2::T) = isequal(promote(S1,S2)...)
+isequal{T<:Integer,B<:DNA2}(S1::T, S2::B) = isequal(promote(S1,S2)...)
+
+## Loop ##
+
+isempty(s::DNA2Seq) = length(s) == 0
 
 start(s::DNA2Seq) = 1
 next(s::DNA2Seq,i) = (s[i],i+1)
 done(s::DNA2Seq,i) = (i > length(s))
 
-function assign(s::DNA2Seq,x,val...)
-  inseq = convert(DNA2Seq,x)
-  assign(s.b1,inseq.b1,val...)
-  assign(s.b2,inseq.b2,val...)
-end
-
-isempty(s::DNA2Seq) = length(s) == 0
+## Write and Show ##
 
 function show(io::IO,seq::DNA2Seq)
   len = length(seq)
@@ -132,52 +158,49 @@ function write(io::IO,seq::DNA2Seq)
   end
 end
 
-dna2seq(x) = convert(DNA2Seq,x)
+show(io::IO,x::DNA2Base) = (write(io,uint8(x)); nothing)
 
-macro dna2_str(s);  :(dna2seq(@b_str($s))); end
+## Complement ##
 
-convert(::Type{ASCIIString}, seq::DNA2Seq) = ASCIIString(convert(Vector{Uint8},seq))
-convert(::Type{DNA2Seq}, str::ASCIIString) = dna2seq(str.data)
+complement!{T<:DNA2}(seq::T) = (seq.b1 = ~seq.b1 ; seq)
+complement{T<:DNA2}(seq::T) = complement!(copy(seq))
 
-bytestring(seq::DNA2Seq) = bytestring(convert(Vector{Uint8},seq))
-
-nt(seq::DNA2Seq)  = convert(Vector{Nucleotide},seq)
-
-complement!(seq::DNA2Seq) = DNA2Seq(~seq.b1,~seq.b2)
-complement(seq::DNA2Seq) = DNA2Seq(~copy(seq.b1),~copy(seq.b2))
-
-reversecomplement!(seq::DNA2Seq) = DNA2Seq(~reverse!(seq.b1),~reverse!(seq.b2))
-reversecomplement(seq::DNA2Seq) = DNA2Seq(~reverse!(copy(seq.b1)),~reverse!(copy(seq.b2)))
+reversecomplement!{T<:DNA2}(seq::T) = (reverse!(seq.b1); seq.b1 = ~seq.b1; reverse!(seq.b2); seq )
+reversecomplement{T<:DNA2}(seq::T) = reversecomplement!(copy(seq))
 
 ## Faster using bit level parallelism:
 
 ##	A	C	T	G
-## b1	1	1	0	0
-## b2	1	0	0	1
+## b1	0	0	1	1
+## b2	0	1	0	1
 
-## A: b1 & b2
-isadenine(seq::DNA2Seq)  = seq.b1 & seq.b2
-## G: ~b1 & b2
-isguanine(seq::DNA2Seq)  = ~seq.b1 & seq.b2
-## C: ~b2 & b1
-iscytosine(seq::DNA2Seq) = ~seq.b2 & seq.b1
-## T: ~b1 & ~b2
-isthymine(seq::DNA2Seq)  = ~seq.b1 & ~seq.b2
-## AT: ~b2 $ b1
-isweak(seq::DNA2Seq)     = seq.b1 $ ~seq.b2
-## CG: b1 $ b2
-isstrong(seq::DNA2Seq)   = seq.b1 $ seq.b2
+## A: ~ (b1 | b2)
+isadenine{T<:DNA2}(seq::T)	= ~ ( seq.b1 | seq.b2 )
+## G: b1 & b2
+isguanine{T<:DNA2}(seq::T)	= seq.b1 & seq.b2
+## C: ~b1 & b2
+iscytosine{T<:DNA2}(seq::T)	= ~seq.b1 & seq.b2
+## T: b1 & ~b2
+isthymine{T<:DNA2}(seq::T)	= seq.b1 & ~seq.b2
+## AT: ~b2
+isweak{T<:DNA2}(seq::T)		= ~seq.b2
+## CG: b2
+isstrong{T<:DNA2}(seq::T)	= seq.b2
+## CT: b1 $ b2
+ispyrimidine{T<:DNA2}(seq::T)	= seq.b1 $ seq.b2
+## AG: ~( b1 $ b2 )
+ispurine{T<:DNA2}(seq::T)	= ~( seq.b1 $ seq.b2 )
 
 function percentGC(seq::DNA2Seq)
   len = length(seq)
-  chunks_len = length(seq.b1.chunks)
-  sum_ones = 0
-  c1 = seq.b1.chunks
   c2 = seq.b2.chunks
+  chunks_len = length(c2)
+  sum_ones = 0
   for i in 1:chunks_len
-    sum_ones += count_ones(c1[i] $ c2[i])
+    sum_ones += count_ones(c2[i])
   end
   sum_ones/len
 end
+
 
 

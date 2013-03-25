@@ -28,8 +28,8 @@ Contains 2 `BitVector` named `b1` and `b2`:
 
 b1\b2 | false | true 
 --------|--------|-------
-**false** |   T   |  G
-**true**  |   C   |  A
+**false** |   A   |  C
+**true**  |   T   |  G
 
 
 String-like behavior for BioUnit Arrays
@@ -58,10 +58,10 @@ Repeat BioUnit for generate an BioUnit Vector
 AminoAcid
 ----------
 
-	aa(x)
-	aa(vec::Vector)
-	aa(str::ASCIIString)
-	aa(mat::Matrix)
+	aminoacid(x)
+	aminoacid(vec::Vector)
+	aminoacid(str::ASCIIString)
+	aminoacid(mat::Matrix)
 
 Converts to Nucleotide or Nucleotide Array
 AminoAcid Vector for Protein Sequence and Matrix for Alignments
@@ -74,11 +74,11 @@ Creates a AminoAcid Vector (Protein Sequence) using aa" ... " (but string interp
 Nucleotide
 ----------
 
-	nt(x)
-	nt(vec::Vector)
-	nt(str::ASCIIString)
-	nt(mat::Matrix)
-	nt(seq::DNA2Seq)
+	nucleotide(x)
+	nucleotide(vec::Vector)
+	nucleotide(str::ASCIIString)
+	nucleotide(mat::Matrix)
+	nucleotide(seq::DNA2Seq)
 
 Converts to Nucleotide or Nucleotide Array
 Nucleotide Vector for DNA or RNA Sequence and Matrix for Alignments
@@ -116,7 +116,7 @@ Converts to DNA2Seq
 
 Creates a 2-bit DNA sequence using dna2" ... " (but string interpolation is only supported for Julia 0.1)
 
-	nt(seq::DNA2Seq)
+	nucleotide(seq::DNA2Seq)
 
 Converts from DNA2Seq to Nucleotide Vector
 
@@ -137,6 +137,8 @@ Fastest GC content estimation for 2-bit DNA sequence
 	isguanine(seq::DNA2Seq)
 	isweak(seq::DNA2Seq)
 	isstrong(seq::DNA2Seq)
+	ispyrimidine(seq::DNA2Seq)
+	ispurine(seq::DNA2Seq)
 
 Faster vectorize functions for test A, C, T, G, AT and CG respectively
 

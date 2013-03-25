@@ -17,17 +17,17 @@ end
 
 ## Conversions ##
 
-aa{T<:Number}(value::T)   = convert(AminoAcid, value)
-nt{T<:Number}(value::T)   = convert(Nucleotide,value)
+aminoacid{T<:Number}(value::T)   = convert(AminoAcid, value)
+nucleotide{T<:Number}(value::T)   = convert(Nucleotide,value)
 
-aa(vec::Vector)  = convert(Vector{AminoAcid}, vec)
-nt(vec::Vector)  = convert(Vector{Nucleotide},vec)
+aminoacid(vec::Vector)  = convert(Vector{AminoAcid}, vec)
+nucleotide(vec::Vector)  = convert(Vector{Nucleotide},vec)
 
-aa(str::ASCIIString)  = convert(Vector{AminoAcid}, str)
-nt(str::ASCIIString)  = convert(Vector{Nucleotide},str)
+aminoacid(str::ASCIIString)  = convert(Vector{AminoAcid}, str)
+nucleotide(str::ASCIIString)  = convert(Vector{Nucleotide},str)
 
-aa(mat::Matrix)  = convert(Matrix{AminoAcid}, mat)
-nt(mat::Matrix)  = convert(Matrix{Nucleotide},mat)
+aminoacid(mat::Matrix)  = convert(Matrix{AminoAcid}, mat)
+nucleotide(mat::Matrix)  = convert(Matrix{Nucleotide},mat)
 
 macro aa_str(s);  :(reinterpret(AminoAcid,  @b_str($s) )); end
 
@@ -85,3 +85,9 @@ convert{T<:BioUnit}(::Type{ASCIIString}, seq::Vector{T}) = ASCIIString(reinterpr
 convert{T<:BioUnit}(::Type{Vector{T}}, str::ASCIIString) = reinterpret(T,copy(str.data))
 
 bytestring{T<:BioUnit}(seq::Vector{T}) = bytestring(reinterpret(Uint8,seq))
+
+## Deprecated ##
+
+nt(x) = throw("Use nucleotide() instead of nt()")
+aa(x) = throw("Use aminoacid() instead of aa()")
+
