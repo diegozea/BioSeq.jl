@@ -18,7 +18,7 @@ Vectors of Nucleotides can be used as DNA or RNA Sequences and Matrices as Align
 
 	Nucleotide8bit
 
-Type in development wrapping an `Uint8` for faster test over nucleotides sequences.
+Immutable type in development wrapping an `Uint8` for faster test over nucleotides sequences.
 The Bit-Level Coding Scheme is described on: [ Paradis, Emmanuel. "A Bit-Level Coding Scheme for Nucleotides." (2007). ](http://ape.mpl.ird.fr/misc/BitLevelCodingScheme_20April2007.pdf)
 
 	AminoAcid
@@ -30,7 +30,7 @@ Vectors of Amino Acids can be used as Protein Sequences and Matrices as Alignmen
 	Nucleotide2bitBase
 
 `Nucleotide2bitSeq` is for nucleotide sequence of 2 bits, only for A C T/U G.
-Slice with `Int` return a `Nucleotide2bitBase` type
+Slice with `Int` return a `Nucleotide2bitBase` immutable type
 Contains 2 `BitVector` named `b1` and `b2`:
 
 b1\b2 | false | true 

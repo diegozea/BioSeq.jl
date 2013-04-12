@@ -55,7 +55,7 @@ function _parse_gc(fh::IOStream)
   r_base2 = r"\s+-- Base2\s+(\S+)"
   r_base3 = r"\s+-- Base3\s+(\S+)"
   
-  for line in each_line(fh) # eachline in Julia 0.2
+  for line in eachline(fh)
     if(!ismatch(r_comment,line))
       if(ismatch(r_id,line))
 	push!(ids,int(match(r_id,line).captures[1]::ASCIIString))
@@ -80,7 +80,7 @@ function _parse_gc(fh::IOStream)
   
 end
 
-type CodonTables
+immutable CodonTables
   ids::Vector{Int}
   amino::Matrix{AminoAcid}
   start::BitArray{2}
@@ -90,7 +90,6 @@ type CodonTables
 end
 
 CodonTables(fh::IOStream) = CodonTables(_parse_gc(fh)...)
-
 
 fh = open(Pkg.dir("BioSeq", "data", "gc.prt"),"r")
 

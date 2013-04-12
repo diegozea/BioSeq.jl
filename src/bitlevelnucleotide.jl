@@ -59,7 +59,7 @@ _to_uint8[4] = '-'
 _to_uint8[2] = '?'
 
 # Must be immutable
-type Nucleotide8bit
+immutable Nucleotide8bit
   byte::Uint8
   Nucleotide8bit{T<:Integer}(x::T) = new(_to_bitscheme[x])
 end

@@ -12,7 +12,7 @@ Nucleotide2bitSeq(len::Int) = Nucleotide2bitSeq(BitArray(len),BitArray(len))
 
 ## Nucleotide2bitBase Type ##
 
-type Nucleotide2bitBase <: Nucleotide2bit
+immutable Nucleotide2bitBase <: Nucleotide2bit
   b1::Bool
   b2::Bool
   Nucleotide2bitBase(b1::Bool,b2::Bool) = new(b1,b2)
