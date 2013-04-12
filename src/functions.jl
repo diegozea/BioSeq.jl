@@ -108,7 +108,7 @@ function percentGC(seq::ASCIIString)
   len = length(seq)
   sum = 0
   for elem in seq
-    if elem | 32 == 'c' || elem | 32 == 'g'
+    if elem | 32 == 'c' || elem | 32 == 'g' || elem | 32 == 's'
       sum += 1
     end
   end
@@ -119,7 +119,7 @@ function percentGC(seq::Vector{Nucleotide})
   len = length(seq)
   sum = 0
   for elem in seq
-    if elem | 32 == 'c' || elem | 32 == 'g'
+    if elem | 32 == 'c' || elem | 32 == 'g' || elem | 32 == 's'
       sum += 1
     end
   end

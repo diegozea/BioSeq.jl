@@ -52,7 +52,6 @@ promote_rule{T<:BioUnit}(::Type{T}, ::Type{None}) = T
 <{T<:BioUnit}(x::T, y::T)  = <( uint8(x),uint8(y))
 <={T<:BioUnit}(x::T, y::T) = <=(uint8(x),uint8(y))
 
-
 ## Bitwise Operations ##
 
 ~{T<:BioUnit}(x::T)            = convert(T,~uint8(x))

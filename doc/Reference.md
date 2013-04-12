@@ -16,14 +16,21 @@ Abstract type for creation of Biological Units of 8-bit
 8-bit bits type for Nucleotides (ribo-and deoxyribonucleic acids) as a subtype for BioUnit.
 Vectors of Nucleotides can be used as DNA or RNA Sequences and Matrices as Alignments
 
+	Nucleotide8bit
+
+Type in development wrapping an `Uint8` for faster test over nucleotides sequences.
+The Bit-Level Coding Scheme is described on: [ Paradis, Emmanuel. "A Bit-Level Coding Scheme for Nucleotides." (2007). ](http://ape.mpl.ird.fr/misc/BitLevelCodingScheme_20April2007.pdf)
+
 	AminoAcid
 
 8-bit bits type for Amino Acids as a subtype of BioUnit
 Vectors of Amino Acids can be used as Protein Sequences and Matrices as Alignments
 
-	DNA2Seq
+	Nucleotide2bitSeq
+	Nucleotide2bitBase
 
-DNA Sequence of 2 bits, only for A C T G.
+`Nucleotide2bitSeq` is for nucleotide sequence of 2 bits, only for A C T/U G.
+Slice with `Int` return a `Nucleotide2bitBase` type
 Contains 2 `BitVector` named `b1` and `b2`:
 
 b1\b2 | false | true 
@@ -78,7 +85,7 @@ Nucleotide
 	nucleotide(vec::Vector)
 	nucleotide(str::ASCIIString)
 	nucleotide(mat::Matrix)
-	nucleotide(seq::DNA2Seq)
+	nucleotide(seq::Nucleotide2bitSeq)
 
 Converts to Nucleotide or Nucleotide Array
 Nucleotide Vector for DNA or RNA Sequence and Matrix for Alignments
@@ -101,46 +108,70 @@ All this functions interchange between T and U and are case insensitive. If you 
 
 This functions give us the complement sequence or the reverse complement. d can be `RNA_COMPLEMENT` or `DNA_COMPLEMENT` or a user defined Array indexed with Nucleotides keys.
 
-DNA2Seq
--------
+Nucleotide2bitSeq
+-----------------
 
-	DNA2Seq(len::Int)
+	Nucleotide2bitSeq(len::Int)
 
-Initialize a DNA2Seq with Thymines of length len
+Initialize a Nucleotide2bitSeq with Thymines of length len
 
-	dna2seq(x)
+	nucleotide2bit(x)
 
-Converts to DNA2Seq
+Converts to `Nucleotide2bitSeq` or `Nucleotide2bitBase`
 
-	@dna2_str
+	@nt2_str
 
-Creates a 2-bit DNA sequence using dna2" ... " (but string interpolation is only supported for Julia 0.1)
+Creates a 2-bit Nucleotide sequence using nt2" ... " (but string interpolation is only supported for Julia 0.1)
 
-	nucleotide(seq::DNA2Seq)
+	nucleotide(seq::Nucleotide2bitSeq)
 
-Converts from DNA2Seq to Nucleotide Vector
+Converts from Nucleotide2bitSeq to Nucleotide Vector
 
-	complement!(seq::DNA2Seq)
-	complement(seq::DNA2Seq)
-	reversecomplement!(seq::DNA2Seq)
-	reversecomplement(seq::DNA2Seq)
+	complement!(seq::Nucleotide2bitSeq)
+	complement(seq::Nucleotide2bitSeq)
+	reversecomplement!(seq::Nucleotide2bitSeq)
+	reversecomplement(seq::Nucleotide2bitSeq)
 
-This functions give us the complement sequence or the reverse complement for a 2-bit DNA sequence.
+This functions give us the complement sequence or the reverse complement for a 2-bit Nucleotide sequence.
 
-	percentGC(seq::DNA2Seq)
+	percentGC(seq::Nucleotide2bitSeq)
 
-Fastest GC content estimation for 2-bit DNA sequence
+Fastest GC content estimation for 2-bit Nucleotide sequence
 
-	isadenine(seq::DNA2Seq)
-	iscytosine(seq::DNA2Seq)
-	isthymine(seq::DNA2Seq)
-	isguanine(seq::DNA2Seq)
-	isweak(seq::DNA2Seq)
-	isstrong(seq::DNA2Seq)
-	ispyrimidine(seq::DNA2Seq)
-	ispurine(seq::DNA2Seq)
+	isadenine(seq::Nucleotide2bit)
+	iscytosine(seq::Nucleotide2bit)
+	isthymine(seq::Nucleotide2bit)
+	isguanine(seq::Nucleotide2bit)
+	isweak(seq::Nucleotide2bit)
+	isstrong(seq::Nucleotide2bit)
+	ispyrimidine(seq::Nucleotide2bit)
+	ispurine(seq::Nucleotide2bit)
 
-Faster vectorize functions for test A, C, T, G, AT and CG respectively
+Faster vectorized functions for test A, C, T, G, AT, CG, CT and AG respectively
+
+Nucleotide8bit
+-----------------
+
+	nucleotide8bit(x)
+
+Converts to Nucleotide8bit
+
+	@nt8_str
+
+Creates a 8-bit Bit-Level Coding Scheme Nucleotide sequence using nt8" ... " (but string interpolation is only supported for Julia 0.1)
+
+	percentGC(seq::Nucleotide8bit)
+
+Fastest GC content estimation for 2-bit Nucleotide sequence
+
+	isadenine
+	iscytosine
+	isthymine
+	isguanine
+	ispyrimidine
+	ispurine
+
+Faster vectorized functions for test A, C, T, G, CT and AG respectively
 
 Matching on BioUnit Vectors
 ----------------------------
@@ -179,6 +210,15 @@ Creates a IUPAC regex for amino acids using `aar"..."`
 
 Creates a IUPAC regex for nucleotides using `ntr"..."`
 
+PROSITE PATTERN REGEX
+---------------------
+
+	@prosite_str
+
+Creates a regex from a PROSITE pattern as described [here](http://prosite.expasy.org/scanprosite/scanprosite-doc.html#pattern_syntax) for amino acids using `prosite"..."`
+
+
+
 Functions for Alphabets
 -----------------------
 
@@ -203,6 +243,37 @@ Interchange a character for other on a Dict
 
 Interchange a character for other on a Array (keys must be the indexes)
 
+Translation
+-----------
+
+	CODON_TABLES
+
+Contains codons tables from [ NCBI Genetic Codes ](http://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi)
+Tables are stored as two matrices (`amino` and `start`).
+Each genetic code is a column. The `ids` field can be used for mapping table ids to column number.
+Each codon is a row. Codons can be mapped to row number using the `codons` field.
+
+	codon2aa(codon,tableid)
+
+Gives the amino acid represented for the codon given an table id.
+
+	isstop(tableid)
+	isstart(tableid)
+
+For a table id returns a `BitArray`. Codon to index can be mapped with the `Dict` `CODON_TABLES.codons`
+
+	isstop(seq,tableid)
+	isstart(seq,tableid)
+
+Returns a Bool (codon) or BitArray (sequence)
+
+	translate(seq,tableid)
+	translatetostop(seq,tableid)
+	translateCDS(seq,tableid)
+
+`translate` change codons to amino acid given a table id.
+`translatetostop` change codons to amino acid given a table id until and stop is founded.
+`translateCDS` change codons to amino acid given a table id only if the sequence length is multiple of three and starts with a start codon and ends with a stop codon.
 
 Nucleotide Alphabets
 --------------------
@@ -226,6 +297,7 @@ Protein Alphabets
 
 	GAPS
 	AMINO_20
+	AMINO_20_UPPERCASE
 	AMINO_GAPPED_20
 	AMINO_IUPAC
 	AMINO_IUPAC_EXTENDED

@@ -131,6 +131,7 @@ const _AMBIGUOUS_NUCLEIC_IUPAC = (Nucleotide=>Array{Uint8,1})[
 			'N'	=>	['X';'W';'S';'K';'M';'Y';'R';'N';'A';'C';'T';'U';'G'],
 			'X'	=>	['X';'W';'S';'K';'M';'Y';'R';'N';'A';'C';'T';'U';'G'] ]
 
+const AMINO_20_UPPERCASE	= IntSet('A','C','D','E','F','G','H','I','K','L','M','N','P','Q','R','S','T','V','W','Y')
 const AMINO_20			= IntSet('A','C','D','E','F','G','H','I','K','L','M','N','P','Q','R','S','T','V','W','Y',
 					 'a','c','d','e','f','g','h','i','k','l','m','n','p','q','r','s','t','v','w','y')
 const AMINO_GAPPED_20		= IntSet('-','.','A','C','D','E','F','G','H','I','K','L','M','N','P','Q','R','S','T','V','W','Y',
@@ -234,6 +235,6 @@ const IUPAC_AMINO_EXTENDED = (AminoAcid=>Array{AminoAcid,1})[
 const _AMBIGUOUS_AMINO_IUPAC = (AminoAcid=>Array{Uint8,1})[
 		  'B'	=>	['B'; 'N'; 'D'],
 		  'X'	=>	['X'; 'B'; 'Z'; 'A'; 'C'; 'D'; 'E'; 'F'; 'G'; 'H'; 'I'; 'K';
-				 'L'; 'M'; 'N'; 'P'; 'Q'; 'R'; 'S'; 'T'; 'V'; 'W'; 'Y'],
+				 'L'; 'M'; 'N'; 'P'; 'Q'; 'R'; 'S'; 'T'; 'V'; 'W'; 'Y'; 'J' ],
 		  'Z'	=>	['Z'; 'Q'; 'E'],
 		  'J'	=>	['J'; 'L'; 'I'] ]

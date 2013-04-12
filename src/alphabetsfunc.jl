@@ -15,7 +15,7 @@ in(s::ASCIIString,y)= in(s.data,y)
 function check{T}(s::AbstractArray{T},y::Union(IntSet,Set,Associative))
   for x in s
     if !has(y,x)
-      error("$x not in this $(typeof(y))")
+      error("$(char(x)) not in this Alphabet")
     end
   end
 end

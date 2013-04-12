@@ -1,5 +1,5 @@
 using BioSeq
-using Test
+using Base.Test
 
 @test nucleotide('A') == nucleotide(65) == nucleotide(0x41)
 @test aminoacid('A') == aminoacid(65) == aminoacid(0x41)
@@ -96,31 +96,30 @@ seqII = nt"TGAC"
 @test swap(nt"ACTG", DNA_COMPLEMENT) == nt"TGAC"
 @test swap(aa"MHAC", AMINO_1LETTER_TO_3) == [ "MET"; "HYS"; "ALA"; "CYS" ]
 
-## Test for DNA2Seq ##
+## Test for Nucleotide2bitSeq ##
 
 ##	A	C	T	G
 ## b1	0	0	1	1
 ## b2	0	1	0	1
 
-@test dna2"ACTG".b1 == [false, false, true, true]
+@test nt2"ACTG".b1 == [false, false, true, true]
+@test nt2"ACTG".b2 == [false, true, false, true]
 
-@test dna2"ACTG".b2 == [false, true, false, true]
+@test nt2"ACTG" == nucleotide2bit("ACTG")
+@test nt2"ACTG"[2] == 'C'
 
-@test dna2"ACTG" == dna2("ACTG")
+@test nt2"ACTG" == nt2"actg" == nt2"ACUG" == nt2"acug"
 
-@test dna2"ACTG"[2] == 'C'
+@test nucleotide(Nucleotide2bitSeq(10)) == nt"AAAAAAAAAA"
 
-@test nucleotide(DNA2Seq(10)) == nt"AAAAAAAAAA"
+@test length(Nucleotide2bitSeq(10)[1:3])==3
 
-@test length(DNA2Seq(10)[1:3])==3
+@test complement(nt2"ACTG") == nt2"TGAC"
+@test reversecomplement(nt2"ACTG") == nt2"CAGT"
 
-@test complement(dna2"ACTG") == dna2"TGAC"
+@test percentGC(nt2"AACC") == 0.5
 
-@test reversecomplement(dna2"ACTG") == dna2"CAGT"
-
-@test percentGC(dna2"AACC") == 0.5
-
-seq = dna2"ACTG"
+seq = nt2"ACTG"
 ntseq = nucleotide(seq)
 @test isadenine(seq) == (ntseq .== 'A')
 @test iscytosine(seq) == (ntseq .== 'C')
@@ -131,4 +130,65 @@ ntseq = nucleotide(seq)
 @test ispyrimidine(seq) == ((ntseq .== 'C') | (ntseq .== 'T'))
 @test ispurine(seq) == ((ntseq .== 'A') | (ntseq .== 'G'))
 
+## Test for Prosite Patterns ##
+
+@test ismatch(prosite"M-[ALT]",aa"HML")
+@test ismatch(prosite"M-{ALT}",aa"HMM")
+@test ismatch(prosite"M-{ALT}",aa"HMM")
+@test ismatch(prosite"M-x(2,10)-M",aa"MALHM")
+@test ismatch(prosite"x(3)",aa"ALM")
+@test ismatch(prosite"x(2,4)",aa"ALM")
+@test ismatch(prosite"x(3)",aa"AAA")
+@test ismatch(prosite"<A-L",aa"ALMH")
+@test ismatch(prosite"<A-L",aa"LALMH") == false
+@test ismatch(prosite"F-[GSTV]-P-R-L-[G>]",aa"FVPRLGH")
+@test ismatch(prosite"F-[GSTV]-P-R-L-[G>]",aa"FVPRL")
+@test ismatch(prosite"F-[GSTV]-P-R-L-[G>]",aa"FVPRLLL") == false
+@test ismatch(prosite"M-A-S-K-E",aa"MASKE")
+@test ismatch(prosite"MASKE",aa"MASKE")
+@test ismatch(prosite"<{C}*>",aa"FVLRPHM")
+@test ismatch(prosite"<{C}*>",aa"FVLRPHCM") == false
+@test ismatch(prosite"[AC]-x-V-x(4)-{ED}",aa"AHVRLPLG")
+@test ismatch(prosite"<A-x-[ST](2)-x(0,1)-V",aa"AHTSV")
+
+## Test Translate ##
+
+@test codon2aa(nt"GTG",1) == 'V'
+@test isstart(nt"GTG",2)
+@test isstop(nt"TGA",1)
+@test isstart(nt"GTGGTAATGTGAAAGTAG",2) == reverse( isstop(nt"GTGGTAATGTGAAAGTAG",1) )
+@test translateCDS(nt"GTGGTAATGTGAAAGTAG",2) == aa"MVMWK"
+@test translatetostop(nt"GTGGTAATGTGAAAGTAG",1) == aa"VVM"
+@test translate(nt"GTGGTAATGTGAAAGTAG",1) == aa"VVM*K*"
+
+## Test for 8 bit Bit-Level Coding Scheme Nucleotides ##
+
+@test nt8"ACTG" == nt8"actg" == nt8"ACUG" == nt8"acug"
+@test nt8"ACTG" == nt"ACTG"
+
+@test nt8"ACTG" == nucleotide8bit("ACTG")
+@test nt8"ACTG"[2] == 'C'
+
+@test nucleotide(nt8"ACTG") == nt"ACTG"
+
+@test length(nt8"AAACCCTTT"[1:3])==3
+
+@test percentGC(nt8"AACC") == 0.5
+
+seq = nt8"ACTG"
+ntseq = nucleotide(seq)
+@test isadenine(seq) == (ntseq .== 'A')
+@test iscytosine(seq) == (ntseq .== 'C')
+@test isthymine(seq) == (ntseq .== 'T')
+@test isguanine(seq) == (ntseq .== 'G')
+@test ispyrimidine(seq) == ((ntseq .== 'C') | (ntseq .== 'T'))
+@test ispurine(seq) == ((ntseq .== 'A') | (ntseq .== 'G'))
+
+# # TO DO:
+# @test nt8"ACTG" == nt"ACUG"
+# @test nt8"ACTG" == nt2"ACTG"
+# @test complement(nt8"ACTG") == nt8"TGAC"
+# @test reversecomplement(nt8"ACTG") == nt8"CAGT"
+# @test isweak(seq) == ((ntseq .== 'A') | (ntseq .== 'T'))
+# @test isstrong(seq) == ((ntseq .== 'C') | (ntseq .== 'G'))
 
