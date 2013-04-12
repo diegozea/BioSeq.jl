@@ -18,6 +18,7 @@ using BioSeq # Starting to use BioSeq
 
 * 2-bit DNA sequence `DNA2Seq` for saving memory
   * Faster vectorized test for calculate percentage of GC, and test A C T G on `DNA2Seq`
+
 * 8-bit bitstype `Nucleotide` and `AminoAcid`
   * Vectors of this types can be used as DNA, RNA or Protein Sequences
     * Some string's functions working for Sequences:
@@ -26,10 +27,13 @@ using BioSeq # Starting to use BioSeq
 	* IUPAC Regex is available for matching functions
 	* PROSITE patterns are available for matching functions
   * Alignments can be represented as Matrices of this types
-    * DArray of this types can be used for parallel computation
-    * Memory-mapped arrays of this types can be used for huge data
+  * DArray of this types can be used for parallel computation
+  * Memory-mapped arrays of this types can be used for huge data
+
 * 8-bit Bit-Level Coding Scheme for Nucleotides
+
 * Translation methods and genetic codes
+
 * Tools for using IntSet/Set/Dict as alphabets
   * Common alphabets as IntSet, including extended IUPAC
   * Dicts for generate complement for nucleotide sequences or change between 3 letter and 1 letter alphabets on Proteins
