@@ -14,7 +14,7 @@ macro ntr_str(pattern, flags...)
     elseif flag_open && elem==']' && i!=1 && pattern[i-1]!='\\'
       flag_open = false
       push!(npat,elem)
-    elseif has(_AMBIGUOUS_NUCLEIC_IUPAC,elem)
+    elseif haskey(_AMBIGUOUS_NUCLEIC_IUPAC,elem)
       if !flag_open push!(npat,'[') end
       append!(npat,_AMBIGUOUS_NUCLEIC_IUPAC[elem])
       if !flag_open push!(npat,']') end
@@ -41,7 +41,7 @@ macro aar_str(pattern, flags...)
     elseif flag_open && elem==']' && i!=1 && pattern[i-1]!='\\'
       flag_open = false
       push!(npat,elem)
-    elseif has(_AMBIGUOUS_AMINO_IUPAC,elem)
+    elseif haskey(_AMBIGUOUS_AMINO_IUPAC,elem)
       if !flag_open push!(npat,'[') end
       append!(npat,_AMBIGUOUS_AMINO_IUPAC[elem])
       if !flag_open push!(npat,']') end

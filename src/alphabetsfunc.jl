@@ -1,9 +1,17 @@
 ## Is In Alphabet ? ##
 
-function in{T}(s::AbstractArray{T},y::Union(IntSet,Set,Associative))
+function in{T,A<:Union(IntSet,Set)}(s::AbstractArray{T},y::A)
   res = BitArray(size(s))
   for i in 1:length(s)
-    res[i] = has(y,s[i])
+    res[i] = contains(y,s[i])
+  end
+  res
+end
+
+function in{T,A<:Associative}(s::AbstractArray{T},y::A)
+  res = BitArray(size(s))
+  for i in 1:length(s)
+    res[i] = haskey(y,s[i])
   end
   res
 end
@@ -12,9 +20,17 @@ in(s::ASCIIString,y)= in(s.data,y)
 
 ## Check Alphabet ##
 
-function check{T}(s::AbstractArray{T},y::Union(IntSet,Set,Associative))
+function check{T,A<:Union(IntSet,Set)}(s::AbstractArray{T},y::A)
   for x in s
-    if !has(y,x)
+    if !contains(y,x)
+      error("$(char(x)) not in this Alphabet")
+    end
+  end
+end
+
+function check{T,A<:Associative}(s::AbstractArray{T},y::A)
+  for x in s
+    if !haskey(y,x)
       error("$(char(x)) not in this Alphabet")
     end
   end

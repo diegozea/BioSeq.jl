@@ -26,8 +26,8 @@ uppercase{T<:BioUnit}(s::AbstractArray{T}) = uppercase!(copy(s))
 
 ## Upper and Lower for BioUnit ##
 
-uppercase{T<:BioUnit}(x::T) = convert(T,uppercase(uint8(x)))
-lowercase{T<:BioUnit}(x::T) = convert(T,lowercase(uint8(x)))
+uppercase{T<:BioUnit}(x::T) = convert(T,uppercase(char(x)))
+lowercase{T<:BioUnit}(x::T) = convert(T,lowercase(char(x))) # Faster but unsafe: convert( T , x | 32 )
 
 ## Matching ##
 

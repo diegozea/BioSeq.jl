@@ -36,7 +36,7 @@ function _exclude(s::ASCIIString)
     throw("All possible amino acids are being excluded")
   end
   possibles = copy(AMINO_20_UPPERCASE)
-  del_each!(possibles,s.data)
+  setdiff!(possibles,s.data)
   ascii(uint8(collect(possibles)))
 end
 
@@ -46,7 +46,7 @@ function _element_parser(elem::ASCIIString)
     if 'x' == firstchar
       return("[ACDEFGHIKLMNPQRSTVWY]") # [ See Pattern syntax 2 ]
     else
-      if has(AMINO_20_UPPERCASE, firstchar )
+      if contains(AMINO_20_UPPERCASE, firstchar )
 	return( elem )
       else
 	throw("$firstchar isn't in xACDEFGHIKLMNPQRSTVWY")

@@ -20,21 +20,21 @@ end
 
 ## Selection ##
 
-ref(s::Nucleotide2bitSeq,ind::Int)  = Nucleotide2bitBase(ref(s.b1,ind),ref(s.b2,ind))
+getindex(s::Nucleotide2bitSeq,ind::Int)  = Nucleotide2bitBase(getindex(s.b1,ind),getindex(s.b2,ind))
 
-ref(s::Nucleotide2bitSeq,ind...)    = Nucleotide2bitSeq(ref(s.b1,ind...),ref(s.b2,ind...))
+getindex(s::Nucleotide2bitSeq,ind...)    = Nucleotide2bitSeq(getindex(s.b1,ind...),getindex(s.b2,ind...))
 
 ## Assignation ##
 
-function assign(s::Nucleotide2bitSeq,x::Nucleotide2bitBase,ind...)
-  assign(s.b1,x.b1,ind...)
-  assign(s.b2,x.b2,ind...)
+function setindex!(s::Nucleotide2bitSeq,x::Nucleotide2bitBase,ind...)
+  setindex!(s.b1,x.b1,ind...)
+  setindex!(s.b2,x.b2,ind...)
 end
 
-function assign(s::Nucleotide2bitSeq,x,ind...)
+function setindex!(s::Nucleotide2bitSeq,x,ind...)
   inseq = convert(Nucleotide2bitBase,x)
-  assign(s.b1,inseq.b1,ind...)
-  assign(s.b2,inseq.b2,ind...)
+  setindex!(s.b1,inseq.b1,ind...)
+  setindex!(s.b2,inseq.b2,ind...)
 end
 
 ## Copy ##
