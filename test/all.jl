@@ -161,6 +161,9 @@ ntseq = nucleotide(seq)
 @test translatetostop(nt"GTGGTAATGTGAAAGTAG",1) == aa"VVM"
 @test translate(nt"GTGGTAATGTGAAAGTAG",1) == aa"VVM*K*"
 
+@test translate(nt2"GTGGTAATGTGAAAGTAG",1) == aa"VVM*K*"
+@test translate(nt8"GTGGTAATGTGAAAGTAG",1) == aa"VVM*K*"
+
 ## Test for 8 bit Bit-Level Coding Scheme Nucleotides ##
 
 @test nt8"ACTG" == nt8"actg" == nt8"ACUG" == nt8"acug"
