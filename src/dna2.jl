@@ -212,3 +212,10 @@ end
 # Hash as Nucleotide
 hash(seq::Nucleotide2bitSeq) = hash(nucleotide(seq))
 hash(base::Nucleotide2bitBase) = hash(nucleotide(base))
+
+
+# Hash Nucleotide2bitSeq as Vector{Nucleotide}
+hash(seq::Nucleotide2bitSeq) = hash(nucleotide(seq))
+
+isequal(S1::Nucleotide2bitSeq, S2::Vector{Nucleotide}) = isequal(nucleotide(S1),S2)
+isequal(S1::Vector{Nucleotide}, S2::Nucleotide2bitSeq) = isequal(S1,nucleotide(S2))
