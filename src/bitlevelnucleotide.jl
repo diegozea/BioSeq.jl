@@ -222,4 +222,8 @@ end
 isequal{T<:Union(Integer,Nucleotide2bit)}(S1::Nucleotide8bit, S2::T) = isequal(convert(T,S1),S2)
 isequal{T<:Union(Integer,Nucleotide2bit)}(S1::T, S2::Nucleotide8bit) = isequal(S1,convert(T,S2))
 
+# Hash Vector{Nucleotide8bit} as Vector{Nucleotide}
+hash(seq::Vector{Nucleotide8bit}) = hash(nucleotide(seq))
 
+isequal(S1::Vector{Nucleotide8bit}, S2::Vector{Nucleotide}) = isequal(nucleotide(S1),S2)
+isequal(S1::Vector{Nucleotide}, S2::Vector{Nucleotide8bit}) = isequal(S1,nucleotide(S2))

@@ -159,7 +159,10 @@ ntseq = nucleotide(seq)
 @test isstart(nt"GTGGTAATGTGAAAGTAG",2) == reverse( isstop(nt"GTGGTAATGTGAAAGTAG",1) )
 @test translateCDS(nt"GTGGTAATGTGAAAGTAG",2) == aa"MVMWK"
 @test translatetostop(nt"GTGGTAATGTGAAAGTAG",1) == aa"VVM"
+
 @test translate(nt"GTGGTAATGTGAAAGTAG",1) == aa"VVM*K*"
+@test translate(nt2"GTGGTAATGTGAAAGTAG",1) == aa"VVM*K*"
+@test translate(nt8"GTGGTAATGTGAAAGTAG",1) == aa"VVM*K*"
 
 ## Test for 8 bit Bit-Level Coding Scheme Nucleotides ##
 
