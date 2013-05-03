@@ -78,7 +78,6 @@ module BioSeq
 	translateCDS,
 	translatetostop,
 	translate,
-	_codons,
 	@prosite_str # Prosite patterns
 
   ## Load files ##
