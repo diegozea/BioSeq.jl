@@ -77,8 +77,8 @@ bits{T<:BioUnit}(x::T) = bin(reinterpret(Uint8,x),8)
 
 ## Array & Strings ##
 
-convert{T<:Union(Uint8,BioUnit)}(::Type{Vector{T}}, seq::Vector{Union(Uint8,BioUnit)}) = reinterpret(T,seq)
-convert{T<:Union(Uint8,BioUnit)}(::Type{Matrix{T}}, aln::Matrix{Union(Uint8,BioUnit)}) = reinterpret(T,aln)
+convert{Tin<:Union(Uint8,BioUnit),Tout<:Union(Uint8,BioUnit)}(::Type{Vector{Tout}}, seq::Vector{Tin}) = reinterpret(Tout,seq)
+convert{Tin<:Union(Uint8,BioUnit),Tout<:Union(Uint8,BioUnit)}(::Type{Matrix{Tout}}, aln::Matrix{Tin}) = reinterpret(Tout,aln)
 
 convert{T<:BioUnit}(::Type{ASCIIString}, seq::Vector{T}) = ASCIIString(reinterpret(Uint8,copy(seq)))
 convert{T<:BioUnit}(::Type{Vector{T}}, str::ASCIIString) = reinterpret(T,copy(str.data))
