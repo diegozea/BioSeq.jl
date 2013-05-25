@@ -66,25 +66,36 @@ function convert{T<:Integer}(::Type{T},s::Nucleotide2bitBase)
     convert(T,_convert_to_char[s.b1+1,s.b2+1])
 end
 
-const _convert_to_base2 = Array(Nucleotide2bitBase,7)
+const _convert_to_base2_index = zeros(Uint8,256)
+_convert_to_base2_index['A'] = 1
+_convert_to_base2_index['a'] = 1
+_convert_to_base2_index['C'] = 2
+_convert_to_base2_index['c'] = 2
+_convert_to_base2_index['T'] = 3
+_convert_to_base2_index['t'] = 3
+_convert_to_base2_index['U'] = 3
+_convert_to_base2_index['u'] = 3
+_convert_to_base2_index['G'] = 4
+_convert_to_base2_index['g'] = 4
+
+const _convert_to_base2 = Array(Nucleotide2bitBase,4)
 
 _convert_to_base2[1] = Nucleotide2bitBase(false,false)
-_convert_to_base2[3] = Nucleotide2bitBase(false,true)
-_convert_to_base2[4] = Nucleotide2bitBase(true,false)
-_convert_to_base2[5] = Nucleotide2bitBase(true,false)
-_convert_to_base2[7] = Nucleotide2bitBase(true,true)
+_convert_to_base2[2] = Nucleotide2bitBase(false,true)
+_convert_to_base2[3] = Nucleotide2bitBase(true,false)
+_convert_to_base2[4] = Nucleotide2bitBase(true,true)
 
 function convert{T<:Integer}(::Type{Nucleotide2bitSeq},s::Vector{T})
   len = length(s)
   seq = Nucleotide2bitSeq(len)
   for i in 1:len
-    seq[i] = _convert_to_base2[s[i] & 7]
+    seq[i] = _convert_to_base2[ _convert_to_base2_index[ s[i] ] ]
   end
   seq
 end
 
 function convert{T<:Integer}(::Type{Nucleotide2bitBase},s::T)
-  _convert_to_base2[s & 7]
+  _convert_to_base2[ _convert_to_base2_index[ s ] ]
 end
 
 nucleotide2bit{T<:Integer}(x::Vector{T}) = convert(Nucleotide2bitSeq,x)

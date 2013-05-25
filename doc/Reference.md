@@ -222,16 +222,25 @@ Creates a regex from a PROSITE pattern as described [here](http://prosite.expasy
 Functions for Alphabets
 -----------------------
 
-You can create an alphabet as an IntSet, Set or Dict.
-IntSet is the most efficient.
+`Alphabet` is an especializated type for Alphabets of `AminoAcid` or `Nucleotide`
+Can be created using the `alphabet` function:
 
-	in{T}(s::AbstractArray{T},y::Union(IntSet,Set,Associative))
+	alphabet{T<:BioUnit}(seq::Vector{T},case_sensitive::Bool)
 
-Test for characters on an alphabet
+For example, the aminolookup's alphabet of Octave and MATLAB can be created as:
+
+	aminolookup = alphabet(aa"ARNDCQEGHILKMFPSTWYVBZX*-",false)
+
+Depend on tyour needs, you can create an alphabet as an IntSet, Set or Dict too.
+Look at the end for Alphabets defined on on BioSeq.jl
+
+	isin{T}(s::AbstractArray{T},y::Union(IntSet,Set,Associative))
+
+Test for characters on an alphabet (`in`in previous version)
 
 	check{T}(s::AbstractArray{T},y::Union(IntSet,Set,Associative))
 
-Check for characters on an alphabet
+Check for characters on an alphabet  (returns `Bool`)
 
 	swap{T,Tk,Tv}(s::AbstractArray{T},y::Dict{Tk,Tv})
 	swap!{T<:Number}(s::AbstractArray{T},y::Dict{T,T})
@@ -278,29 +287,16 @@ Returns a Bool (codon) or BitArray (sequence)
 Nucleotide Alphabets
 --------------------
 
-	GAPS
-	DNA_4
-	DNA_4_GAPPED
-	RNA_4
-	RNA_4_GAPPED
-	DNA_AMBIGUOUS
-	DNA_GAPPED_AMBIGUOUS
-	RNA_AMBIGUOUS
-	RNA_GAPPED_AMBIGUOUS
+	NUCLEIC_IUPAC
 	DNA_COMPLEMENT
 	RNA_COMPLEMENT
-	NUCLEIC_IUPAC_AMBIGUOUS
-	
-	
+	NUCLEIC_IUPAC_AMBIGUOUS_DICT
+
 Protein Alphabets
 -----------------
 
-	GAPS
-	AMINO_20
-	AMINO_20_UPPERCASE
-	AMINO_GAPPED_20
 	AMINO_IUPAC
-	AMINO_IUPAC_EXTENDED
+	AMINO_20_UPPERCASE
 	AMINO_1LETTER_TO_3
 	AMINO_3LETTERS_TO_1
-	IUPAC_AMINO_EXTENDED
+	AMINO_IUPAC_EXTENDED_DICT

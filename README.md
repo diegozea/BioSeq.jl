@@ -1,8 +1,6 @@
 BioSeq.jl
 =========
-
-**Version 0.2.0**
-
+Version 0.2.1
 
 **Package for working with Nucleotides and Amino Acids on [The Julia Language](http://julialang.org/)**
 
@@ -48,6 +46,21 @@ using BioSeq # Starting to use BioSeq
 ```
 julia> using BioSeq
 
+julia> const dna4alphabet = alphabet(nt"ACTG", false)
+Case Insensitive Alphabet{Nucleotide} of 4 elements:
+
+ indice   : 256-element Uint8 Array
+ alphabet : 4-element Nucleotide Array
+
+ alphabet                       indice[alphabet]
+ Nucleotide (Int64)             Uint8 (Int64)
+
+ A (65)                         0x01 (1)
+ C (67)                         0x02 (2)
+ T (84)                         0x03 (3)
+ G (71)                         0x04 (4)
+
+
 julia> dnaseq = repeat( nt"GATTACA" , 2 )
 14-element Nucleotide Array:
  G
@@ -64,6 +77,9 @@ julia> dnaseq = repeat( nt"GATTACA" , 2 )
  A
  C
  A
+
+julia> check(dnaseq, dna4alphabet)
+true
 
 julia> protseq = translate(dnaseq,1)
 4-element AminoAcid Array:

@@ -35,7 +35,7 @@ function _exclude(s::ASCIIString)
   if search(s,'x')!=0
     throw("All possible amino acids are being excluded")
   end
-  possibles = copy(AMINO_20_UPPERCASE)
+  possibles = IntSet(collect(AMINO_20_UPPERCASE)...)
   setdiff!(possibles,s.data)
   ascii(uint8(collect(possibles)))
 end

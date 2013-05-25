@@ -9,11 +9,13 @@ module BioSeq
 
   ## Exported methods and types #print(io,char(x))#
   export BioUnit,
+	Alphabet,
+	alphabet,
 	uppercase!,
 	lowercase!,
 	swap!,
 	swap,
-	in,
+	isin,
 	check,
 	Nucleotide, ## For Nucleotides
 	nt,
@@ -28,31 +30,20 @@ module BioSeq
 	complement,
 	reversecomplement!,
 	reversecomplement,
-	GAPS,
-	DNA_4,
-	DNA_4_GAPPED,
-	RNA_4,
-	RNA_4_GAPPED,
-	DNA_AMBIGUOUS,
-	DNA_GAPPED_AMBIGUOUS,
-	RNA_AMBIGUOUS,
-	RNA_GAPPED_AMBIGUOUS,
+	NUCLEIC_IUPAC,
 	DNA_COMPLEMENT,
 	RNA_COMPLEMENT,
-	NUCLEIC_IUPAC_AMBIGUOUS,
+	NUCLEIC_IUPAC_AMBIGUOUS_DICT,
 	AminoAcid, ## For Amino Acids
 	aa,
 	aminoacid,
 	@aa_str,
 	@aar_str,
-	AMINO_20,
-	AMINO_20_UPPERCASE,
-	AMINO_GAPPED_20,
 	AMINO_IUPAC,
-	AMINO_IUPAC_EXTENDED,
+	AMINO_20_UPPERCASE,
 	AMINO_1LETTER_TO_3,
 	AMINO_3LETTERS_TO_1,
-	IUPAC_AMINO_EXTENDED,
+	AMINO_IUPAC_EXTENDED_DICT,
 	Nucleotide2bitSeq, ## 2-bit DNA
 	Nucleotide2bitBase,
 	Nucleotide2bit,
@@ -78,6 +69,7 @@ module BioSeq
 	translateCDS,
 	translatetostop,
 	translate,
+	_codons,
 	@prosite_str # Prosite patterns
 
   ## Load files ##

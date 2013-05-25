@@ -38,13 +38,6 @@ macro nt_str(s);  :(reinterpret(Nucleotide, @b_str($s) )); end
 promote_rule{Tb<:BioUnit,T<:Number}(::Type{Tb}, ::Type{T}) = T
 promote_rule{T<:BioUnit}(::Type{T}, ::Type{None}) = T
 
-## Operations ##
-
--{T<:BioUnit}(x::T, y::Int) = convert(T,( int(x) - y ))
-+{T<:BioUnit}(x::T, y::Int) = convert(T,( int(x) + y ))
--{T<:BioUnit}(x::Int, y::T) = y - x
-+{T<:BioUnit}(x::Int, y::T) = y + x
-
 ## Comparisons ##
 
 =={T<:BioUnit}(x::T, y::T) = ==(uint8(x),uint8(y))
@@ -64,8 +57,8 @@ promote_rule{T<:BioUnit}(::Type{T}, ::Type{None}) = T
 
 ## Characteristics ##
 
-typemin{T<:BioUnit}(::Type{T}) = convert(T,0x00)
-typemax{T<:BioUnit}(::Type{T}) = convert(T,0xff)
+typemin{T<:BioUnit}(::Type{T}) = convert(T, 0x00 )
+typemax{T<:BioUnit}(::Type{T}) = convert(T, 0xff )
 
 ## Show as Character ##
 
@@ -77,8 +70,17 @@ bits{T<:BioUnit}(x::T) = bin(reinterpret(Uint8,x),8)
 
 ## Array & Strings ##
 
-convert{Tin<:Union(Uint8,BioUnit),Tout<:Union(Uint8,BioUnit)}(::Type{Vector{Tout}}, seq::Vector{Tin}) = reinterpret(Tout,seq)
-convert{Tin<:Union(Uint8,BioUnit),Tout<:Union(Uint8,BioUnit)}(::Type{Matrix{Tout}}, aln::Matrix{Tin}) = reinterpret(Tout,aln)
+convert{N}(::Type{Array{AminoAcid,N}}, x::Array{AminoAcid,N}) = x
+convert{N}(::Type{Array{Nucleotide,N}}, x::Array{Nucleotide,N}) = x
+
+convert{N}(::Type{Array{AminoAcid,N}}, x::Array{Nucleotide,N}) = reinterpret(AminoAcid,s)
+convert{N}(::Type{Array{Nucleotide,N}}, x::Array{AminoAcid,N}) = reinterpret(Nucleotide,s)
+
+convert{N}(::Type{Array{Uint8,N}},s::Array{AminoAcid,N}) = reinterpret(Uint8,s)
+convert{N}(::Type{Array{AminoAcid,N}},s::Array{Uint8,N}) = reinterpret(AminoAcid,s)
+
+convert{N}(::Type{Array{Uint8,N}},s::Array{Nucleotide,N}) = reinterpret(Uint8,s)
+convert{N}(::Type{Array{Nucleotide,N}},s::Array{Uint8,N}) = reinterpret(Nucleotide,s)
 
 convert{T<:BioUnit}(::Type{ASCIIString}, seq::Vector{T}) = ASCIIString(reinterpret(Uint8,copy(seq)))
 convert{T<:BioUnit}(::Type{Vector{T}}, str::ASCIIString) = reinterpret(T,copy(str.data))
