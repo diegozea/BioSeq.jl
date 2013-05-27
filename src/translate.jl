@@ -212,7 +212,7 @@ const _codons = (Vector{Nucleotide}=>Int)[['G','C','U']=>53,['G','C','t']=>53,['
 ['T','G','t']=>13,['G','t','G']=>52,['C','T','A']=>19,['A','t','A']=>35,['C','U','g']=>20,
 ['C','t','C']=>18,['A','C','A']=>39,['t','T','T']=>1,['G','T','T']=>49]
 
-immutable CodonTables
+type CodonTables
   ids::Vector{Int}
   amino::Matrix{AminoAcid}
   start::BitArray{2}
