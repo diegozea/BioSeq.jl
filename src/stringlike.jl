@@ -31,19 +31,22 @@ lowercase{T<:BioUnit}(x::T) = convert(T,lowercase(char(x))) # Faster but unsafe:
 
 ## Matching ##
 
-ismatch{T<:BioUnit}(r::Regex, s::Vector{T}) = ismatch(r, bytestring(s))
+# _unsafe_ascii makes a faster conversion, but violates immutability
+_unsafe_ascii{T<:BioUnit}(seq::Vector{T}) = ASCIIString( reinterpret(Uint8,seq) )
 
-match{T<:BioUnit}(re::Regex, s::Vector{T}, idx::Integer) = match(re,bytestring(s),idx)
-match{T<:BioUnit}(r::Regex, s::Vector{T}) = match(r, bytestring(s), 1)
+ismatch{T<:BioUnit}(r::Regex, s::Vector{T}) = ismatch(r, _unsafe_ascii(s))
 
-search{T<:BioUnit}(s::Vector{T}, r::Regex, idx::Integer) = search(bytestring(s),r,idx)
-search{T<:BioUnit}(s::Vector{T}, r::Regex) = search(bytestring(s),r,1)
+match{T<:BioUnit}(re::Regex, s::Vector{T}, idx::Integer) = match(re,_unsafe_ascii(s),idx)
+match{T<:BioUnit}(r::Regex, s::Vector{T}) = match(r, _unsafe_ascii(s), 1)
+
+search{T<:BioUnit}(s::Vector{T}, r::Regex, idx::Integer) = search(_unsafe_ascii(s),r,idx)
+search{T<:BioUnit}(s::Vector{T}, r::Regex) = search(_unsafe_ascii(s),r,1)
 
 search{T<:BioUnit}(s::Vector{T}, c, i) = search(reinterpret(Uint8,s),c,i)
 search{T<:BioUnit}(s::Vector{T}, c) = search(reinterpret(Uint8,s),c,1)
 
-each_match{T<:BioUnit}(re::Regex, s::Vector{T}, ovr::Bool) = RegexMatchIterator(re,bytestring(s),ovr)
-each_match{T<:BioUnit}(re::Regex, s::Vector{T}) = RegexMatchIterator(re,bytestring(s),false)
+each_match{T<:BioUnit}(re::Regex, s::Vector{T}, ovr::Bool) = RegexMatchIterator(re,_unsafe_ascii(s),ovr)
+each_match{T<:BioUnit}(re::Regex, s::Vector{T}) = RegexMatchIterator(re,_unsafe_ascii(s),false)
 
 ## Some String Function ##
 

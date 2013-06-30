@@ -90,8 +90,8 @@ seqII = nt"TGAC"
 @test replace(aa"ACAC",r"ACA",aa"M") == aa"MC"
 @test replace(aa"ACAC",r"A",aa"TH") == aa"THCTHC"
 
-@test sum(in(nt"ACTGactg", DNA_4 )) == 8
-@test sum(in(nt"MCTGactg", DNA_4 )) == 7
+@test sum(isin(nt"ACTGactg", NUCLEIC_IUPAC )) == 8
+@test sum(isin(nt"ECTGactg", NUCLEIC_IUPAC )) == 7
 
 @test swap(nt"ACTG", DNA_COMPLEMENT) == nt"TGAC"
 @test swap(aa"MHAC", AMINO_1LETTER_TO_3) == [ "MET"; "HYS"; "ALA"; "CYS" ]
