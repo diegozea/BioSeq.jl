@@ -42,8 +42,8 @@ match{T<:BioUnit}(r::Regex, s::Vector{T}) = match(r, _unsafe_ascii(s), 1)
 search{T<:BioUnit}(s::Vector{T}, r::Regex, idx::Integer) = search(_unsafe_ascii(s),r,idx)
 search{T<:BioUnit}(s::Vector{T}, r::Regex) = search(_unsafe_ascii(s),r,1)
 
-search{T<:BioUnit}(s::Vector{T}, c, i) = search(reinterpret(Uint8,s),c,i)
-search{T<:BioUnit}(s::Vector{T}, c) = search(reinterpret(Uint8,s),c,1)
+search{T<:BioUnit}(s::Vector{T}, c, i) = search(_unsafe_ascii(s),c,i)
+search{T<:BioUnit}(s::Vector{T}, c) = search(_unsafe_ascii(s),c,1)
 
 each_match{T<:BioUnit}(re::Regex, s::Vector{T}, ovr::Bool) = RegexMatchIterator(re,_unsafe_ascii(s),ovr)
 each_match{T<:BioUnit}(re::Regex, s::Vector{T}) = RegexMatchIterator(re,_unsafe_ascii(s),false)
