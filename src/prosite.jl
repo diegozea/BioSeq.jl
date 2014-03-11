@@ -46,7 +46,7 @@ function _element_parser(elem::ASCIIString)
     if 'x' == firstchar
       return("[ACDEFGHIKLMNPQRSTVWY]") # [ See Pattern syntax 2 ]
     else
-      if contains(AMINO_20_UPPERCASE, firstchar )
+      if in(firstchar, AMINO_20_UPPERCASE)
 	return( elem )
       else
 	throw("$firstchar isn't in xACDEFGHIKLMNPQRSTVWY")
@@ -60,7 +60,7 @@ function _element_parser(elem::ASCIIString)
       throw("You can only use a range with 'x'") # [ See Note on Pattern Syntax 6 ]
     elseif search(elem,'{')!=0 # [ See pattern syntax 4 ]
       cap = match( r"(<*)\{(.+)\}([\(>]*.*)" , elem )
-      elem = string(cap.captures[1],"[",_exclude(cap.captures[2]),"]",cap.captures[3])
+      elem = string(cap.captures[1],"[",_exclude(ascii(cap.captures[2])),"]",cap.captures[3])
     else
       elem = replace(elem,'x',"[ACDEFGHIKLMNPQRSTVWY]")
       return(ascii(_prosite_dict[elem.data])) # Replace ( ) to { } and < > to ^ $
@@ -75,13 +75,13 @@ function _prosite2regex(str::ASCIIString)
   if length(elements)==1
     # Without '-' can be something like <{C}*> or a sequence [ See extended syntax ]
     if str[1] == '<'
-      values = _exclude( match( r"<\{(.+)\}\*>", str ).captures[1] )
+      values = _exclude( ascii( match( r"<\{(.+)\}\*>", str ).captures[1] ) )
       return( "^[$(values)]+\$" )
     else
-      return( _element_parser( str ) )
+      return( _element_parser( ascii(str) ) )
     end
   else
-    return( string( [ _element_parser(elem) for elem in elements ]... ) )
+    return( string( [ _element_parser( ascii(elem) ) for elem in elements ]... ) )
   end
 end
 
