@@ -185,8 +185,8 @@ The next functions works as in String but on BioUnit Vectors:
 	search{T<:BioUnit}(s::Vector{T}, r::Regex)
 	search{T<:BioUnit}(s::Vector{T}, c, i::Integer)
 	search{T<:BioUnit}(s::Vector{T}, c)
-	each_match{T<:BioUnit}(re::Regex, s::Vector{T}, ovr::Bool)
-	each_match{T<:BioUnit}(re::Regex, s::Vector{T})
+	eachmatch{T<:BioUnit}(re::Regex, s::Vector{T}, ovr::Bool)
+	eachmatch{T<:BioUnit}(re::Regex, s::Vector{T})
 	replace{T<:BioUnit}(s::Vector{T}, pattern, r, limit::Integer)
 	replace{T<:BioUnit}(s::Vector{T}, pat, r)
 
