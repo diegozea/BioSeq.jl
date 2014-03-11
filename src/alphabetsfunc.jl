@@ -48,14 +48,14 @@ getindex{T <: BioUnit, I <: Union(Uint8,Int)}(ab::Alphabet{T}, i::AbstractArray{
 getindex{T <: BioUnit}(ab::Alphabet{T}, i::T ) = ab.indice[ i ]
 getindex{T <: BioUnit}(ab::Alphabet{T}, i::AbstractArray{T} ) = ab.indice[ i ]
 
-contains{T <: BioUnit}(ab::Alphabet{T},element::T) = ab.indice[element] != 0
+in{T <: BioUnit}(element::T, ab::Alphabet{T}) = ab.indice[element] != 0
 
 ## Is In Alphabet ? ##
 
 function isin{T,A<:Union(IntSet,Set,Alphabet)}(s::AbstractArray{T},y::A)
   res = BitArray(size(s))
   for i in 1:length(s)
-    res[i] = contains(y,s[i])
+    res[i] = in(s[i],y)
   end
   res
 end
@@ -74,7 +74,7 @@ isin(s::ASCIIString,y)= isin(s.data,y)
 
 function check{T,A<:Union(IntSet,Set,Alphabet)}(s::AbstractArray{T},y::A)
   for x in s
-    if !contains(y,x)
+    if !in(x,y)
       println("$(char(x)) is not in this Alphabet")
       return(false)
     end
