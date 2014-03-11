@@ -143,7 +143,7 @@ function show(io::IO,seq::Nucleotide2bitSeq)
   print(len)
   println(" bp Nucleotide2bitSeq:")
   if len > 0
-    screen = tty_rows() > 6 ? tty_rows() - 5 : tty_rows()
+    screen = Base.tty_rows() > 6 ? Base.tty_rows() - 5 : Base.tty_rows()
     if length(seq) <= screen
       print(" ")
       print(char(seq[1]))
