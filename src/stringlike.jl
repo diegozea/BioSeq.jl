@@ -45,8 +45,8 @@ search{T<:BioUnit}(s::Vector{T}, r::Regex) = search(_unsafe_ascii(s),r,1)
 search{T<:BioUnit}(s::Vector{T}, c, i) = search(_unsafe_ascii(s),c,i)
 search{T<:BioUnit}(s::Vector{T}, c) = search(_unsafe_ascii(s),c,1)
 
-each_match{T<:BioUnit}(re::Regex, s::Vector{T}, ovr::Bool) = RegexMatchIterator(re,_unsafe_ascii(s),ovr)
-each_match{T<:BioUnit}(re::Regex, s::Vector{T}) = RegexMatchIterator(re,_unsafe_ascii(s),false)
+eachmatch{T<:BioUnit}(re::Regex, s::Vector{T}, ovr::Bool) = Base.RegexMatchIterator(re,_unsafe_ascii(s),ovr)
+eachmatch{T<:BioUnit}(re::Regex, s::Vector{T}) = Base.RegexMatchIterator(re,_unsafe_ascii(s),false)
 
 ## Some String Function ##
 
