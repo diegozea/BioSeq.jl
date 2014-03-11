@@ -73,8 +73,8 @@ seqII = nt"TGAC"
 @test search(aa"ACAC",aar"A",2) == 3:3
 @test search(nt"ACAC",ntr"A",2) == 3:3
 
-@test [x.match for x in [each_match(aar"A",aa"ACAC")...]] == [ "A"; "A" ]
-@test [x.match for x in [each_match(ntr"A",nt"ACAC")...]] == [ "A"; "A" ]
+@test [x.match for x in [eachmatch(aar"A",aa"ACAC")...]] == [ "A"; "A" ]
+@test [x.match for x in [eachmatch(ntr"A",nt"ACAC")...]] == [ "A"; "A" ]
 
 @test repeat(aa"A",3) == aa"AAA"
 @test repeat(nt"A",3) == nt"AAA"
