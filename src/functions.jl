@@ -14,9 +14,9 @@ macro ntr_str(pattern, flags...)
     elseif flag_open && elem==']' && i!=1 && pattern[i-1]!='\\'
       flag_open = false
       push!(npat,elem)
-    elseif haskey(_AMBIGUOUS_NUCLEIC_IUPAC,elem)
+    elseif haskey(_AMBIGUOUS_NUCLEIC_IUPAC,nucleotide(elem))
       if !flag_open push!(npat,'[') end
-      append!(npat,_AMBIGUOUS_NUCLEIC_IUPAC[elem])
+      append!(npat,_AMBIGUOUS_NUCLEIC_IUPAC[nucleotide(elem)])
       if !flag_open push!(npat,']') end
     else
       push!(npat,elem)
@@ -41,9 +41,9 @@ macro aar_str(pattern, flags...)
     elseif flag_open && elem==']' && i!=1 && pattern[i-1]!='\\'
       flag_open = false
       push!(npat,elem)
-    elseif haskey(_AMBIGUOUS_AMINO_IUPAC,elem)
+    elseif haskey(_AMBIGUOUS_AMINO_IUPAC,aminoacid(elem))
       if !flag_open push!(npat,'[') end
-      append!(npat,_AMBIGUOUS_AMINO_IUPAC[elem])
+      append!(npat,_AMBIGUOUS_AMINO_IUPAC[aminoacid(elem)])
       if !flag_open push!(npat,']') end
     else
       push!(npat,elem)
