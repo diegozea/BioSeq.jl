@@ -208,6 +208,9 @@ end
 # Hash as Nucleotide
 hash(base::Nucleotide8bit) = hash(nucleotide(base))
 
+==(S1::Nucleotide8bit, S2::Nucleotide8bit) = ==(S1.byte,S2.byte)
+
+# Julia 0.2 compatibility
 isequal(S1::Nucleotide8bit, S2::Nucleotide8bit) = isequal(S1.byte,S2.byte)
 
 const _convert_to_nt8 = nucleotide8bit(['A' 'C';'T' 'G'])
@@ -219,11 +222,19 @@ function convert(::Type{Nucleotide8bit},s::Nucleotide2bitBase)
   _convert_to_nt8[s.b1+1,s.b2+1]
 end
 
+=={T<:Union(Integer,Nucleotide2bit)}(S1::Nucleotide8bit, S2::T) = ==(convert(T,S1),S2)
+=={T<:Union(Integer,Nucleotide2bit)}(S1::T, S2::Nucleotide8bit) = ==(S1,convert(T,S2))
+
+# Julia 0.2 compatibility
 isequal{T<:Union(Integer,Nucleotide2bit)}(S1::Nucleotide8bit, S2::T) = isequal(convert(T,S1),S2)
 isequal{T<:Union(Integer,Nucleotide2bit)}(S1::T, S2::Nucleotide8bit) = isequal(S1,convert(T,S2))
 
 # Hash Vector{Nucleotide8bit} as Vector{Nucleotide}
 hash(seq::Vector{Nucleotide8bit}) = hash(nucleotide(seq))
 
+==(S1::Vector{Nucleotide8bit}, S2::Vector{Nucleotide}) = ==(nucleotide(S1),S2)
+==(S1::Vector{Nucleotide}, S2::Vector{Nucleotide8bit}) = ==(S1,nucleotide(S2))
+
+# Julia 0.2 compatibility
 isequal(S1::Vector{Nucleotide8bit}, S2::Vector{Nucleotide}) = isequal(nucleotide(S1),S2)
 isequal(S1::Vector{Nucleotide}, S2::Vector{Nucleotide8bit}) = isequal(S1,nucleotide(S2))

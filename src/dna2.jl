@@ -120,6 +120,16 @@ promote_rule{T<:Integer,B<:Nucleotide2bit}(::Type{T}, ::Type{B} ) = T
 promote_rule{T<:Integer}(::Type{Nucleotide2bitSeq}, ::Type{Vector{T}} ) = Vector{T}
 promote_rule{T<:Integer}(::Type{Vector{T}}, ::Type{Nucleotide2bitSeq} ) = Vector{T}
 
+=={T<:Nucleotide2bit}(S1::T, S2::T) = ==(S1.b1,S2.b1) && ==(S1.b2,S2.b2)
+
+
+=={T<:Integer,B<:Nucleotide2bit}(S1::B, S2::T) = ==(promote(S1,S2)...)
+=={T<:Integer,B<:Nucleotide2bit}(S1::T, S2::B) = ==(promote(S1,S2)...)
+
+=={T<:Integer}(S1::Nucleotide2bitSeq, S2::Vector{T}) = ==(promote(S1,S2)...)
+=={T<:Integer}(S1::Vector{T}, S2::Nucleotide2bitSeq) = ==(promote(S1,S2)...)
+
+# Julia 0.2 compatibility
 isequal{T<:Nucleotide2bit}(S1::T, S2::T) = isequal(S1.b1,S2.b1) && isequal(S1.b2,S2.b2)
 
 isequal{T<:Integer,B<:Nucleotide2bit}(S1::B, S2::T) = isequal(promote(S1,S2)...)
@@ -227,5 +237,9 @@ hash(base::Nucleotide2bitBase) = hash(nucleotide(base))
 # Hash Nucleotide2bitSeq as Vector{Nucleotide}
 hash(seq::Nucleotide2bitSeq) = hash(nucleotide(seq))
 
+==(S1::Nucleotide2bitSeq, S2::Vector{Nucleotide}) = ==(nucleotide(S1),S2)
+==(S1::Vector{Nucleotide}, S2::Nucleotide2bitSeq) = ==(S1,nucleotide(S2))
+
+# Julia 0.2 compatibility
 isequal(S1::Nucleotide2bitSeq, S2::Vector{Nucleotide}) = isequal(nucleotide(S1),S2)
 isequal(S1::Vector{Nucleotide}, S2::Nucleotide2bitSeq) = isequal(S1,nucleotide(S2))
