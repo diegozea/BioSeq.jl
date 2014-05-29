@@ -87,6 +87,10 @@ convert{T<:BioUnit}(::Type{Vector{T}}, str::ASCIIString) = reinterpret(T,copy(st
 
 bytestring{T<:BioUnit}(seq::Vector{T}) = bytestring(reinterpret(Uint8,seq))
 
+## HASH (for Julia 0.3)
+hash{T<:BioUnit}(x::T) = hash(uint8(x))
+hash{T<:BioUnit}(seq::Vector{T}) = hash(bytestring(seq))
+
 ## Deprecated ##
 
 nt(x) = throw("Use nucleotide() instead of nt()")
