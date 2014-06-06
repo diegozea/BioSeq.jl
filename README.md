@@ -1,6 +1,6 @@
 BioSeq.jl
 =========
-Version 0.2.1
+Version 0.3.0
 
 **Package for working with Nucleotides and Amino Acids on [The Julia Language](http://julialang.org/)**
 
