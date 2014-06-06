@@ -71,7 +71,7 @@ function replace{T<:BioUnit}(s::Vector{T}, pattern, r, limit::Integer)
     cases = 0
     range = search(s,pattern)
     st = range.start
-    en = range.start + range.len - 1
+    en = range.stop
     if st==0
       return(s)
     else
@@ -87,7 +87,7 @@ function replace{T<:BioUnit}(s::Vector{T}, pattern, r, limit::Integer)
 	pre = en + 1
         range = search(s,pattern,pre)
 	st = range.start
-	en = range.start + range.len - 1
+	en = range.stop
         cases += 1
     end
     if pre<=length(s); append!(res,s[pre:end]) end
