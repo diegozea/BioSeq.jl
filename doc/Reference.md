@@ -204,11 +204,11 @@ IUPAC REGEX
 
 	@aar_str
 
-Creates a IUPAC regex for amino acids using `aar"..."`
+Creates a IUPAC regex for amino acids using `aar"..."`. For example, `ismatch(@aar_str("AWJ"),aminoacid("AWI"))` returns `true`.
 
 	@ntr_str
 
-Creates a IUPAC regex for nucleotides using `ntr"..."`
+Creates a IUPAC regex for nucleotides using `ntr"..."`. For example, `ismatch(@ntr_str("ABN"),nucleotide("ATC"))` returns `true`.
 
 PROSITE PATTERN REGEX
 ---------------------
