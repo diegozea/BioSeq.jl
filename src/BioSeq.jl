@@ -7,7 +7,7 @@ module BioSeq
   # import Base.convert, Base.show
   importall Base
 
-  ## Exported methods and types #print(io,char(x))#
+  ## Exported methods and types #print(io,Char(x))#
   export BioUnit,
 	Alphabet,
 	alphabet,

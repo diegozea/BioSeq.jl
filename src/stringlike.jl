@@ -1,8 +1,10 @@
 ## To Lower Case ##
 
+rem{T<:BioUnit}(x::T, y::Type{UInt8}) = rem(UInt8(x), y)
+
 function lowercase!{T<:BioUnit}(s::AbstractArray{T})
   for i = 1:length(s)
-    if 'A' <= char(s[i]) <= 'Z'
+    if 'A' <= Char(s[i]) <= 'Z'
       s[i] += 32
     end
   end
@@ -15,7 +17,7 @@ lowercase{T<:BioUnit}(s::AbstractArray{T}) = lowercase!(copy(s))
 
 function uppercase!{T<:BioUnit}(s::AbstractArray{T})
   for i = 1:length(s)
-    if 'a' <= char(s[i]) <= 'z'
+    if 'a' <= Char(s[i]) <= 'z'
       s[i] -= 32
     end
   end
@@ -26,13 +28,13 @@ uppercase{T<:BioUnit}(s::AbstractArray{T}) = uppercase!(copy(s))
 
 ## Upper and Lower for BioUnit ##
 
-uppercase{T<:BioUnit}(x::T) = convert(T,uppercase(char(x)))
-lowercase{T<:BioUnit}(x::T) = convert(T,lowercase(char(x))) # Faster but unsafe: convert( T , x | 32 )
+uppercase{T<:BioUnit}(x::T) = convert(T,uppercase(Char(x)))
+lowercase{T<:BioUnit}(x::T) = convert(T,lowercase(Char(x))) # Faster but unsafe: convert( T , x | 32 )
 
 ## Matching ##
 
 # _unsafe_ascii makes a faster conversion, but violates immutability
-_unsafe_ascii{T<:BioUnit}(seq::Vector{T}) = ASCIIString( reinterpret(Uint8,seq) )
+_unsafe_ascii{T<:BioUnit}(seq::Vector{T}) = ASCIIString( reinterpret(UInt8,seq) )
 
 ismatch{T<:BioUnit}(r::Regex, s::Vector{T}) = ismatch(r, _unsafe_ascii(s))
 
@@ -54,7 +56,7 @@ repeat{T<:BioUnit}(s::Vector{T}, n::Int) = vec(repmat(s,n,1))
 
 repeat{T<:BioUnit}(x::T, n::Int) = fill(x,n)
 
-function swap!{T<:BioUnit,Tp<:Integer,Tc<:Integer}(x::AbstractArray{T},p::Tp,c::Tc)
+function swap!{T<:BioUnit,Tp<:Union{Integer, Char},Tc<:Union{Integer, Char}}(x::AbstractArray{T},p::Tp,c::Tc)
   pat = convert(T,p)
   cha = convert(T,c)
   for i in 1:length(x)
@@ -65,7 +67,7 @@ function swap!{T<:BioUnit,Tp<:Integer,Tc<:Integer}(x::AbstractArray{T},p::Tp,c::
   return x
 end
 
-swap{T<:BioUnit,Tp<:Integer,Tc<:Integer}(x::AbstractArray{T},p::Tp,c::Tc) = swap!(copy(x),p,c)
+swap{T<:BioUnit,Tp<:Union{Integer, Char},Tc<:Union{Integer, Char}}(x::AbstractArray{T},p::Tp,c::Tc) = swap!(copy(x),p,c)
 
 function replace{T<:BioUnit}(s::Vector{T}, pattern, r, limit::Integer)
     cases = 0

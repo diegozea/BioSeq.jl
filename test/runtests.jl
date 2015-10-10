@@ -19,7 +19,7 @@ using Base.Test
 # # but string interpolation is only supported for Julia 0.1
 # seq = nt"TG"
 # @test nt"AC$seq" == nt"ACTG"
-# 
+#
 # seq = aa"HM"
 # @test aa"AC$seq" == aa"ACHM"
 
@@ -29,7 +29,7 @@ using Base.Test
 seq   = nt"ACTG"
 seqII = nt"TGAC"
 
-@test [ seq', seqII' ] == [ seq seqII ]' == vcat( seq', seqII' ) == nucleotide([ "ACTG".data', "TGAC".data' ])
+@test [ seq'; seqII' ] == [ seq seqII ]' == vcat( seq', seqII' ) == nucleotide([ "ACTG".data'; "TGAC".data' ])
 
 @test nt"ACUG" == dna2rna(nt"ACTG")
 @test nt"ACTG" == rna2dna(nt"ACUG")

@@ -51,32 +51,32 @@ length(s::Nucleotide2bitSeq) = length(s.b1)
 ## b1	0	0	1	1
 ## b2	0	1	0	1
 
-const _convert_to_char = ['A' 'C';'T' 'G']
+const _convert_to_Char = ['A' 'C';'T' 'G']
 
-function convert{T<:Integer}(::Type{Array{T,1}},s::Nucleotide2bitSeq)
+function convert{T<:Union{Integer, Char}}(::Type{Array{T,1}},s::Nucleotide2bitSeq)
   len = length(s)
   out = Array(T,len)
   for i in 1:len
-    out[i] = _convert_to_char[s.b1[i]+1,s.b2[i]+1]
+    out[i] = _convert_to_Char[s.b1[i]+1,s.b2[i]+1]
   end
   out
 end
 
-function convert{T<:Integer}(::Type{T},s::Nucleotide2bitBase)
-    convert(T,_convert_to_char[s.b1+1,s.b2+1])
+function convert{T<:Union{Integer, Char}}(::Type{T},s::Nucleotide2bitBase)
+    convert(T,_convert_to_Char[s.b1+1,s.b2+1])
 end
 
-const _convert_to_base2_index = zeros(Uint8,256)
-_convert_to_base2_index['A'] = 1
-_convert_to_base2_index['a'] = 1
-_convert_to_base2_index['C'] = 2
-_convert_to_base2_index['c'] = 2
-_convert_to_base2_index['T'] = 3
-_convert_to_base2_index['t'] = 3
-_convert_to_base2_index['U'] = 3
-_convert_to_base2_index['u'] = 3
-_convert_to_base2_index['G'] = 4
-_convert_to_base2_index['g'] = 4
+const _convert_to_base2_index = zeros(UInt8,256)
+_convert_to_base2_index[Int('A')] = 1
+_convert_to_base2_index[Int('a')] = 1
+_convert_to_base2_index[Int('C')] = 2
+_convert_to_base2_index[Int('c')] = 2
+_convert_to_base2_index[Int('T')] = 3
+_convert_to_base2_index[Int('t')] = 3
+_convert_to_base2_index[Int('U')] = 3
+_convert_to_base2_index[Int('u')] = 3
+_convert_to_base2_index[Int('G')] = 4
+_convert_to_base2_index[Int('g')] = 4
 
 const _convert_to_base2 = Array(Nucleotide2bitBase,4)
 
@@ -85,7 +85,7 @@ _convert_to_base2[2] = Nucleotide2bitBase(false,true)
 _convert_to_base2[3] = Nucleotide2bitBase(true,false)
 _convert_to_base2[4] = Nucleotide2bitBase(true,true)
 
-function convert{T<:Integer}(::Type{Nucleotide2bitSeq},s::Vector{T})
+function convert{T<:Union{Integer, Char}}(::Type{Nucleotide2bitSeq},s::Vector{T})
   len = length(s)
   seq = Nucleotide2bitSeq(len)
   for i in 1:len
@@ -94,19 +94,19 @@ function convert{T<:Integer}(::Type{Nucleotide2bitSeq},s::Vector{T})
   seq
 end
 
-function convert{T<:Integer}(::Type{Nucleotide2bitBase},s::T)
+function convert{T<:Union{Integer, Char}}(::Type{Nucleotide2bitBase},s::T)
   _convert_to_base2[ _convert_to_base2_index[ s ] ]
 end
 
-nucleotide2bit{T<:Integer}(x::Vector{T}) = convert(Nucleotide2bitSeq,x)
-nucleotide2bit{T<:Integer}(x::T) = convert(Nucleotide2bitBase,x)
+nucleotide2bit{T<:Union{Integer, Char}}(x::Vector{T}) = convert(Nucleotide2bitSeq,x)
+nucleotide2bit{T<:Union{Integer, Char}}(x::T) = convert(Nucleotide2bitBase,x)
 
 macro nt2_str(s);  :(nucleotide2bit(@b_str($s))); end
 
-convert(::Type{ASCIIString}, seq::Nucleotide2bitSeq) = ASCIIString(convert(Vector{Uint8},seq))
+convert(::Type{ASCIIString}, seq::Nucleotide2bitSeq) = ASCIIString(convert(Vector{UInt8},seq))
 convert(::Type{Nucleotide2bitSeq}, str::ASCIIString) = nucleotide2bit(str.data)
 
-bytestring(seq::Nucleotide2bitSeq) = bytestring(convert(Vector{Uint8},seq))
+bytestring(seq::Nucleotide2bitSeq) = bytestring(convert(Vector{UInt8},seq))
 
 nucleotide2bit(x::ASCIIString) = convert(Nucleotide2bitSeq,x)
 
@@ -114,29 +114,29 @@ nucleotide(seq::Nucleotide2bitSeq)  = convert(Vector{Nucleotide},seq)
 
 ## == ##
 
-promote_rule{T<:Integer,B<:Nucleotide2bit}(::Type{B}, ::Type{T} ) = T
-promote_rule{T<:Integer,B<:Nucleotide2bit}(::Type{T}, ::Type{B} ) = T
+promote_rule{T<:Union{Integer, Char},B<:Nucleotide2bit}(::Type{B}, ::Type{T} ) = T
+promote_rule{T<:Union{Integer, Char},B<:Nucleotide2bit}(::Type{T}, ::Type{B} ) = T
 
-promote_rule{T<:Integer}(::Type{Nucleotide2bitSeq}, ::Type{Vector{T}} ) = Vector{T}
-promote_rule{T<:Integer}(::Type{Vector{T}}, ::Type{Nucleotide2bitSeq} ) = Vector{T}
+promote_rule{T<:Union{Integer, Char}}(::Type{Nucleotide2bitSeq}, ::Type{Vector{T}} ) = Vector{T}
+promote_rule{T<:Union{Integer, Char}}(::Type{Vector{T}}, ::Type{Nucleotide2bitSeq} ) = Vector{T}
 
 =={T<:Nucleotide2bit}(S1::T, S2::T) = ==(S1.b1,S2.b1) && ==(S1.b2,S2.b2)
 
 
-=={T<:Integer,B<:Nucleotide2bit}(S1::B, S2::T) = ==(promote(S1,S2)...)
-=={T<:Integer,B<:Nucleotide2bit}(S1::T, S2::B) = ==(promote(S1,S2)...)
+=={T<:Union{Integer, Char},B<:Nucleotide2bit}(S1::B, S2::T) = ==(promote(S1,S2)...)
+=={T<:Union{Integer, Char},B<:Nucleotide2bit}(S1::T, S2::B) = ==(promote(S1,S2)...)
 
-=={T<:Integer}(S1::Nucleotide2bitSeq, S2::Vector{T}) = ==(promote(S1,S2)...)
-=={T<:Integer}(S1::Vector{T}, S2::Nucleotide2bitSeq) = ==(promote(S1,S2)...)
+=={T<:Union{Integer, Char}}(S1::Nucleotide2bitSeq, S2::Vector{T}) = ==(promote(S1,S2)...)
+=={T<:Union{Integer, Char}}(S1::Vector{T}, S2::Nucleotide2bitSeq) = ==(promote(S1,S2)...)
 
 # Julia 0.2 compatibility
 isequal{T<:Nucleotide2bit}(S1::T, S2::T) = isequal(S1.b1,S2.b1) && isequal(S1.b2,S2.b2)
 
-isequal{T<:Integer,B<:Nucleotide2bit}(S1::B, S2::T) = isequal(promote(S1,S2)...)
-isequal{T<:Integer,B<:Nucleotide2bit}(S1::T, S2::B) = isequal(promote(S1,S2)...)
+isequal{T<:Union{Integer, Char},B<:Nucleotide2bit}(S1::B, S2::T) = isequal(promote(S1,S2)...)
+isequal{T<:Union{Integer, Char},B<:Nucleotide2bit}(S1::T, S2::B) = isequal(promote(S1,S2)...)
 
-isequal{T<:Integer}(S1::Nucleotide2bitSeq, S2::Vector{T}) = isequal(promote(S1,S2)...)
-isequal{T<:Integer}(S1::Vector{T}, S2::Nucleotide2bitSeq) = isequal(promote(S1,S2)...)
+isequal{T<:Union{Integer, Char}}(S1::Nucleotide2bitSeq, S2::Vector{T}) = isequal(promote(S1,S2)...)
+isequal{T<:Union{Integer, Char}}(S1::Vector{T}, S2::Nucleotide2bitSeq) = isequal(promote(S1,S2)...)
 
 ## Loop ##
 
@@ -156,25 +156,25 @@ function show(io::IO,seq::Nucleotide2bitSeq)
     screen = Base.tty_size()[1] > 6 ? Base.tty_size()[1] - 5 : Base.tty_size()[1]
     if length(seq) <= screen
       print(" ")
-      print(char(seq[1]))
+      print(Char(seq[1]))
       if(len>1)
 	for i in 2:len
 	  print("\n")
 	  print(" ")
-	  print(char(seq[i]))
+	  print(Char(seq[i]))
 	end
       end
     else
-      partlen = int((screen)/2) - 1
+      partlen = Int((screen)/2) - 1
       for i in 1:partlen
 	print(" ")
-	println(char(seq[i]))
+	println(Char(seq[i]))
       end
       print(" \u22ee")
       for i in (len-partlen):len
 	print("\n")
 	print(" ")
-	print(char(seq[i]))
+	print(Char(seq[i]))
       end
     end
   end
@@ -182,11 +182,11 @@ end
 
 function write(io::IO,seq::Nucleotide2bitSeq)
   for bp in seq
-    write(io,char(bp))
+    write(io,Char(bp))
   end
 end
 
-show(io::IO,x::Nucleotide2bitBase) = (write(io,uint8(x)); nothing)
+show(io::IO,x::Nucleotide2bitBase) = (write(io,UInt8(x)); nothing)
 
 ## Complement ##
 

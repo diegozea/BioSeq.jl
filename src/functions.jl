@@ -1,7 +1,7 @@
 ## Nucleotide IUPAC Regex ##
 
 macro ntr_str(pattern, flags...)
-  npat = Uint8[]
+  npat = UInt8[]
   flag_open = false
   for i in 1:length(pattern)
     elem = pattern[i]
@@ -28,7 +28,7 @@ end
 ## Amino Acid IUPAC Regex ##
 
 macro aar_str(pattern, flags...)
-  npat = Uint8[]
+  npat = UInt8[]
   flag_open = false
   for i in 1:length(pattern)
     elem = pattern[i]
@@ -57,7 +57,7 @@ end
 
 function dna2rna!(s::AbstractArray{Nucleotide})
   for i in 1:length(s)
-    if int(s[i]) | 32 == 116
+    if Int(s[i]) | 32 == 116
       s[i] += 1
     end
   end
@@ -70,7 +70,7 @@ dna2rna(s::AbstractArray{Nucleotide}) = dna2rna!(copy(s))
 
 function rna2dna!(s::AbstractArray{Nucleotide})
   for i in 1:length(s)
-    if int(s[i]) | 32 == 117
+    if Int(s[i]) | 32 == 117
       s[i] -= 1
     end
   end

@@ -3,14 +3,12 @@ importall Base, BioSeq
 
 immutable Alphabet{ T <: BioUnit }
   alphabet::Array{T,1}
-  indice::Array{Uint8,1}
+  indice::Array{UInt8,1}
   case_sensitive::Bool
-  
-  Alphabet{T <: BioUnit}(alphabet::Array{T,1},indices::Array{Uint8,1},case_sensitive::Bool) = new(alphabet,indices,case_sensitive)
 end
 
 function alphabet{T <: BioUnit}(seq::Array{T,1}, case_sensitive::Bool)
-  indices = zeros(Uint8, 256 )
+  indices = zeros(UInt8, 256 )
   if case_sensitive
     seq = unique(seq)
     indices[seq] = 1:length(seq)
@@ -20,7 +18,7 @@ function alphabet{T <: BioUnit}(seq::Array{T,1}, case_sensitive::Bool)
     seq = uppercase!(seq)
     indices[seq] = 1:length(seq)
   end
-  
+
   Alphabet{T}(seq,indices,case_sensitive)
 end
 
@@ -34,17 +32,17 @@ join{T <: BioUnit}(ab::Alphabet{T}) = join(ab.alphabet)
 
 function show{T <: BioUnit}(io::IO,ab::Alphabet{T})
   println(io,"Case $(ab.case_sensitive ? "S":"Ins")ensitive Alphabet{$(T)} of $(length(ab)) elements:\n")
-  println(io," indice   : $(length(ab.indice))-element $Uint8 Array")
+  println(io," indice   : $(length(ab.indice))-element $UInt8 Array")
   println(io," alphabet : $(length(ab.alphabet))-element $T Array\n")
   println(" alphabet\t\t\tindice[alphabet]")
-  println(io," $T ($Int)\t\tUint8 ($Int)\n")
+  println(io," $T ($Int)\t\tUInt8 ($Int)\n")
   for letter in ab
     println(io," $letter ($(int(letter))) \t\t\t$(ab.indice[letter]) ($(int(ab.indice[letter])))")
   end
 end
 
-getindex{T <: BioUnit, I <: Union(Uint8,Int)}(ab::Alphabet{T}, i::I ) = ab.alphabet[ i ]
-getindex{T <: BioUnit, I <: Union(Uint8,Int)}(ab::Alphabet{T}, i::AbstractArray{I} ) = ab.alphabet[ i ]
+getindex{T <: BioUnit, I <: Union{UInt8,Int}}(ab::Alphabet{T}, i::I ) = ab.alphabet[ i ]
+getindex{T <: BioUnit, I <: Union{UInt8,Int}}(ab::Alphabet{T}, i::AbstractArray{I} ) = ab.alphabet[ i ]
 getindex{T <: BioUnit}(ab::Alphabet{T}, i::T ) = ab.indice[ i ]
 getindex{T <: BioUnit}(ab::Alphabet{T}, i::AbstractArray{T} ) = ab.indice[ i ]
 
@@ -52,7 +50,7 @@ in{T <: BioUnit}(element::T, ab::Alphabet{T}) = ab.indice[element] != 0
 
 ## Is In Alphabet ? ##
 
-function isin{T,A<:Union(IntSet,Set,Alphabet)}(s::AbstractArray{T},y::A)
+function isin{T,A<:Union{IntSet,Set,Alphabet}}(s::AbstractArray{T},y::A)
   res = BitArray(size(s))
   for i in 1:length(s)
     res[i] = in(s[i],y)
@@ -72,10 +70,10 @@ isin(s::ASCIIString,y)= isin(s.data,y)
 
 ## Check Alphabet ##
 
-function check{T,A<:Union(IntSet,Set,Alphabet)}(s::AbstractArray{T},y::A)
+function check{T,A<:Union{IntSet,Set,Alphabet}}(s::AbstractArray{T},y::A)
   for x in s
     if !in(x,y)
-      println("$(char(x)) is not in this Alphabet")
+      println("$(Char(x)) is not in this Alphabet")
       return(false)
     end
   end
@@ -85,7 +83,7 @@ end
 function check{T,A<:Associative}(s::AbstractArray{T},y::A)
   for x in s
     if !haskey(y,x)
-      println("$(char(x)) is not in this Alphabet")
+      println("$(Char(x)) is not in this Alphabet")
       return(false)
     end
   end
@@ -114,6 +112,6 @@ end
 swap!{T<:Integer,Tv}(s::AbstractArray{T},y::Array{Tv}) = (for i in length(s) s[i] = y[s[i]] end)
 swap{T<:Integer,Tv}(s::AbstractArray{T},y::Array{Tv}) = [y[b] for b in s]
 
-swap(s::ASCIIString,y)= ASCIIString(convert(Vector{Uint8},swap(s.data,y)))
+swap(s::ASCIIString,y)= ASCIIString(convert(Vector{UInt8},swap(s.data,y)))
 
 ## TODO: rand

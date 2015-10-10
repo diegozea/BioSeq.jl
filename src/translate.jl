@@ -1,6 +1,6 @@
 const _index = [1,2,3,4,5,6,0,0,7,8,9,10,11,12,13,14,0,0,0,0,15,16,17,18]
 
-const _amino = reinterpret(AminoAcid,[0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46;
+const _amino = AminoAcid[0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46;
  0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46  0x46;
  0x4c  0x4c  0x4c  0x4c  0x4c  0x4c  0x4c  0x4c  0x4c  0x4c  0x4c  0x4c  0x4c  0x4c  0x4c  0x4c  0x2a  0x4c;
  0x4c  0x4c  0x4c  0x4c  0x4c  0x4c  0x4c  0x4c  0x4c  0x4c  0x4c  0x4c  0x4c  0x4c  0x4c  0x4c  0x4c  0x4c;
@@ -63,7 +63,7 @@ const _amino = reinterpret(AminoAcid,[0x46  0x46  0x46  0x46  0x46  0x46  0x46  
  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47;
  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47;
  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47;
- 0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47])
+ 0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47  0x47]
 
 const _start = convert(BitArray,[false  false  false  false  false  false  false  false  false  false  false  false  false  false  false  false  false  false;
  false  false  false  false  false  false  false  false  false  false  false  false  false  false  false  false  false  false;
@@ -130,7 +130,7 @@ const _start = convert(BitArray,[false  false  false  false  false  false  false
  false  false  false  false  false  false  false  false  false  false  false  false  false  false  false  false  false  false;
  false  false  false  false  false  false  false  false  false  false  false  false  false  false  false  false  false  false])
 
-const _codons = (Vector{Nucleotide}=>Int)[nucleotide(['G','C','U'])=>53,nucleotide(['G','C','t'])=>53,nucleotide(['u','U','G'])=>4,nucleotide(['C','C','t'])=>21,nucleotide(['U','G','c'])=>14,
+const _codons = Dict{Vector{Nucleotide},Int}( nucleotide(['G','C','U'])=>53,nucleotide(['G','C','t'])=>53,nucleotide(['u','U','G'])=>4,nucleotide(['C','C','t'])=>21,nucleotide(['U','G','c'])=>14,
 nucleotide(['u','U','U'])=>1,nucleotide(['C','u','U'])=>17,nucleotide(['C','A','T'])=>25,nucleotide(['c','T','T'])=>17,nucleotide(['c','T','G'])=>20,
 nucleotide(['A','T','A'])=>35,nucleotide(['A','C','g'])=>40,nucleotide(['T','C','g'])=>8,nucleotide(['G','A','t'])=>57,nucleotide(['U','C','a'])=>7,
 nucleotide(['U','C','G'])=>8,nucleotide(['C','G','c'])=>30,nucleotide(['G','A','U'])=>57,nucleotide(['t','C','A'])=>7,nucleotide(['t','G','C'])=>14,
@@ -210,7 +210,7 @@ nucleotide(['G','G','a'])=>63,nucleotide(['A','c','U'])=>37,nucleotide(['C','c',
 nucleotide(['U','u','A'])=>3,nucleotide(['G','G','A'])=>63,nucleotide(['T','C','T'])=>5,nucleotide(['U','A','A'])=>11,nucleotide(['C','C','c'])=>22,
 nucleotide(['G','C','T'])=>53,nucleotide(['C','T','C'])=>18,nucleotide(['T','A','c'])=>10,nucleotide(['T','A','C'])=>10,nucleotide(['g','U','U'])=>49,
 nucleotide(['T','G','t'])=>13,nucleotide(['G','t','G'])=>52,nucleotide(['C','T','A'])=>19,nucleotide(['A','t','A'])=>35,nucleotide(['C','U','g'])=>20,
-nucleotide(['C','t','C'])=>18,nucleotide(['A','C','A'])=>39,nucleotide(['t','T','T'])=>1,nucleotide(['G','T','T'])=>49]
+nucleotide(['C','t','C'])=>18,nucleotide(['A','C','A'])=>39,nucleotide(['t','T','T'])=>1,nucleotide(['G','T','T'])=>49 )
 
 
 immutable CodonTables
@@ -218,7 +218,7 @@ immutable CodonTables
   amino::Matrix{AminoAcid}
   start::BitArray{2}
   codons::Dict{Vector{Nucleotide},Int}
-  
+
   CodonTables(t::Vector{Int},a::Matrix{AminoAcid},s::BitArray{2},c::Dict{Vector{Nucleotide},Int}) = new(t,a,s,c)
 end
 
@@ -241,7 +241,7 @@ function isstop(seq,tableid::Int)
   if len==3
     return( CODON_TABLES.amino[ CODON_TABLES.codons[ seq ] , idx ] == '*' )
   else
-    ncod = int(floor(len/3))
+    ncod = Int(floor(len/3))
     out = falses(ncod)
     for i in 1:ncod
       out[i] = CODON_TABLES.amino[ CODON_TABLES.codons[ seq[(3i - 2):(3i)] ] , idx ] == '*'
@@ -258,7 +258,7 @@ function isstart(seq,tableid::Int)
   if len==3
     return( CODON_TABLES.start[ CODON_TABLES.codons[ seq ] , idx ] )
   else
-    ncod = int(floor(len/3))
+    ncod = Int(floor(len/3))
     out = falses(ncod)
     for i in 1:ncod
       out[i] = CODON_TABLES.start[ CODON_TABLES.codons[ seq[(3i - 2):(3i)] ] , idx ]
@@ -272,8 +272,8 @@ isstart(tableid::Int) = CODON_TABLES.start[ : , CODON_TABLES.ids[tableid] ]
 function translateCDS(seq,tableid::Int)
   len = length(seq)
   idx = CODON_TABLES.ids[tableid]
-  if len%3 == 0 
-    if CODON_TABLES.start[ CODON_TABLES.codons[  seq[1:3] ] , idx ] 
+  if len%3 == 0
+    if CODON_TABLES.start[ CODON_TABLES.codons[  seq[1:3] ] , idx ]
       if CODON_TABLES.amino[ CODON_TABLES.codons[ seq[len-2:len] ] , idx ] == '*'
 	out = Array( AminoAcid, div(len,3)-1 )
 	ind = 1

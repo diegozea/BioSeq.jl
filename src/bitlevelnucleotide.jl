@@ -1,45 +1,45 @@
 ## Show & convert as Nucleotide ##
 
-const _to_bitscheme = zeros(Uint8,256)
-_to_bitscheme['A'] = 136
-_to_bitscheme['G'] = 72
-_to_bitscheme['C'] = 40
-_to_bitscheme['T'] = 24
-_to_bitscheme['U'] = 24
-_to_bitscheme['R'] = 192
-_to_bitscheme['M'] = 160
-_to_bitscheme['W'] = 144
-_to_bitscheme['S'] = 96
-_to_bitscheme['K'] = 80
-_to_bitscheme['Y'] = 48
-_to_bitscheme['V'] = 224
-_to_bitscheme['H'] = 176
-_to_bitscheme['D'] = 208
-_to_bitscheme['B'] = 112
-_to_bitscheme['N'] = 240
-_to_bitscheme['X'] = 240
-_to_bitscheme['-'] = 4
-_to_bitscheme['.'] = 4
-_to_bitscheme['?'] = 2
-_to_bitscheme['a'] = 136
-_to_bitscheme['g'] = 72
-_to_bitscheme['c'] = 40
-_to_bitscheme['t'] = 24
-_to_bitscheme['u'] = 24
-_to_bitscheme['r'] = 192
-_to_bitscheme['m'] = 160
-_to_bitscheme['w'] = 144
-_to_bitscheme['s'] = 96
-_to_bitscheme['k'] = 80
-_to_bitscheme['y'] = 48
-_to_bitscheme['v'] = 224
-_to_bitscheme['h'] = 176
-_to_bitscheme['d'] = 208
-_to_bitscheme['b'] = 112
-_to_bitscheme['n'] = 240
-_to_bitscheme['x'] = 240
+const _to_bitscheme = zeros(UInt8,256)
+_to_bitscheme[Int('A')] = 136
+_to_bitscheme[Int('G')] = 72
+_to_bitscheme[Int('C')] = 40
+_to_bitscheme[Int('T')] = 24
+_to_bitscheme[Int('U')] = 24
+_to_bitscheme[Int('R')] = 192
+_to_bitscheme[Int('M')] = 160
+_to_bitscheme[Int('W')] = 144
+_to_bitscheme[Int('S')] = 96
+_to_bitscheme[Int('K')] = 80
+_to_bitscheme[Int('Y')] = 48
+_to_bitscheme[Int('V')] = 224
+_to_bitscheme[Int('H')] = 176
+_to_bitscheme[Int('D')] = 208
+_to_bitscheme[Int('B')] = 112
+_to_bitscheme[Int('N')] = 240
+_to_bitscheme[Int('X')] = 240
+_to_bitscheme[Int('-')] = 4
+_to_bitscheme[Int('.')] = 4
+_to_bitscheme[Int('?')] = 2
+_to_bitscheme[Int('a')] = 136
+_to_bitscheme[Int('g')] = 72
+_to_bitscheme[Int('c')] = 40
+_to_bitscheme[Int('t')] = 24
+_to_bitscheme[Int('u')] = 24
+_to_bitscheme[Int('r')] = 192
+_to_bitscheme[Int('m')] = 160
+_to_bitscheme[Int('w')] = 144
+_to_bitscheme[Int('s')] = 96
+_to_bitscheme[Int('k')] = 80
+_to_bitscheme[Int('y')] = 48
+_to_bitscheme[Int('v')] = 224
+_to_bitscheme[Int('h')] = 176
+_to_bitscheme[Int('d')] = 208
+_to_bitscheme[Int('b')] = 112
+_to_bitscheme[Int('n')] = 240
+_to_bitscheme[Int('x')] = 240
 
-const _to_uint8 = zeros(Uint8,256)
+const _to_uint8 = zeros(UInt8,256)
 _to_uint8[136] = 'A'
 _to_uint8[72] = 'G'
 _to_uint8[40] = 'C'
@@ -60,31 +60,31 @@ _to_uint8[2] = '?'
 
 # Must be immutable
 immutable Nucleotide8bit
-  byte::Uint8
-  Nucleotide8bit{T<:Integer}(x::T) = new(_to_bitscheme[x])
+  byte::UInt8
+  Nucleotide8bit{T<:Union{Integer, Char}}(x::T) = new(_to_bitscheme[x])
 end
 
 ## Conversions ##
 # All conversions change the bit representation
 
-convert{T<:Integer}(::Type{Nucleotide8bit},x::T) = Nucleotide8bit(x)
-convert{T<:Integer}(::Type{T},x::Nucleotide8bit) = convert(T,_to_uint8[x.byte])
-convert(::Type{Uint8},x::Nucleotide8bit) = _to_uint8[x.byte]
+convert{T<:Union{Integer, Char}}(::Type{Nucleotide8bit},x::T) = Nucleotide8bit(x)
+convert{T<:Union{Integer, Char}}(::Type{T},x::Nucleotide8bit) = convert(T,_to_uint8[x.byte])
+convert(::Type{UInt8},x::Nucleotide8bit) = _to_uint8[x.byte]
 
 nucleotide(base::Nucleotide8bit) =  _to_uint8[base.byte]
 
-nucleotide8bit{T<:Integer}(value::T)   = convert(Nucleotide8bit,value)
+nucleotide8bit{T<:Union{Integer, Char}}(value::T)   = convert(Nucleotide8bit,value)
 
-nucleotide8bit{T<:Integer}(vec::Vector{T})  = convert(Vector{Nucleotide8bit},vec)
-nucleotide8bit{T<:Integer}(mat::Matrix{T})  = convert(Matrix{Nucleotide8bit},mat)
+nucleotide8bit{T<:Union{Integer, Char}}(vec::Vector{T})  = convert(Vector{Nucleotide8bit},vec)
+nucleotide8bit{T<:Union{Integer, Char}}(mat::Matrix{T})  = convert(Matrix{Nucleotide8bit},mat)
 
 nucleotide8bit(str::ASCIIString)  = convert(Vector{Nucleotide8bit},str)
 
-bytestring(seq::Vector{Nucleotide8bit}) = bytestring(convert(Vector{Uint8},seq))
+bytestring(seq::Vector{Nucleotide8bit}) = bytestring(convert(Vector{UInt8},seq))
 
 macro nt8_str(s);  :(convert(Vector{Nucleotide8bit}, @b_str($s) )); end
 
-convert(::Type{ASCIIString}, seq::Vector{Nucleotide8bit}) = ASCIIString(convert(Vector{Uint8},seq))
+convert(::Type{ASCIIString}, seq::Vector{Nucleotide8bit}) = ASCIIString(convert(Vector{UInt8},seq))
 convert(::Type{Vector{Nucleotide8bit}}, str::ASCIIString) = convert(Vector{Nucleotide8bit},str.data)
 
 ## Show ##
@@ -99,8 +99,8 @@ bits(x::Nucleotide8bit) = bits(x.byte)
 # By conversions to an Integer type
 
 for fun in [:(==),:(!=),:(<),:(<=)]
-  @eval $(fun){T<:Integer}(x::Nucleotide8bit,y::T) = $(fun)(convert(T,x),y)
-  @eval $(fun){T<:Integer}(x::T,y::Nucleotide8bit) = $(fun)(x,convert(T,y))
+  @eval $(fun){T<:Union{Integer, Char}}(x::Nucleotide8bit,y::T) = $(fun)(convert(T,x),y)
+  @eval $(fun){T<:Union{Integer, Char}}(x::T,y::Nucleotide8bit) = $(fun)(x,convert(T,y))
 end
 
 ## Bitwise Operations ##
@@ -110,8 +110,8 @@ end
 ~(x::Nucleotide8bit)              = ~x.byte
 
 for fun in [:((&)),:(|),:(($))]
-  @eval $(fun){T<:Integer}(x::Nucleotide8bit,y::T) = $(fun)(x.byte,y)
-  @eval $(fun){T<:Integer}(x::T,y::Nucleotide8bit) = $(fun)(x,y.byte)
+  @eval $(fun){T<:Union{Integer, Char}}(x::Nucleotide8bit,y::T) = $(fun)(x.byte,y)
+  @eval $(fun){T<:Union{Integer, Char}}(x::T,y::Nucleotide8bit) = $(fun)(x,y.byte)
   @eval $(fun)(x::Nucleotide8bit,y::Nucleotide8bit) = $(fun)(x.byte,y.byte)
 end
 
@@ -213,7 +213,7 @@ hash(base::Nucleotide8bit) = hash(nucleotide(base))
 # Julia 0.2 compatibility
 isequal(S1::Nucleotide8bit, S2::Nucleotide8bit) = isequal(S1.byte,S2.byte)
 
-const _convert_to_nt8 = nucleotide8bit(['A' 'C';'T' 'G'])
+const _convert_to_nt8 = Nucleotide8bit[UInt8('A') UInt8('C');UInt8('T') UInt8('G')]
 
 function convert(::Type{Nucleotide2bitBase},s::Nucleotide8bit)
   _convert_to_base2[s & 7]
@@ -222,12 +222,12 @@ function convert(::Type{Nucleotide8bit},s::Nucleotide2bitBase)
   _convert_to_nt8[s.b1+1,s.b2+1]
 end
 
-=={T<:Union(Integer,Nucleotide2bit)}(S1::Nucleotide8bit, S2::T) = ==(convert(T,S1),S2)
-=={T<:Union(Integer,Nucleotide2bit)}(S1::T, S2::Nucleotide8bit) = ==(S1,convert(T,S2))
+==(S1::Nucleotide8bit, S2::Nucleotide2bit) = ==(convert(T,S1),S2)
+==(S1::Nucleotide2bit, S2::Nucleotide8bit) = ==(S1,convert(T,S2))
 
 # Julia 0.2 compatibility
-isequal{T<:Union(Integer,Nucleotide2bit)}(S1::Nucleotide8bit, S2::T) = isequal(convert(T,S1),S2)
-isequal{T<:Union(Integer,Nucleotide2bit)}(S1::T, S2::Nucleotide8bit) = isequal(S1,convert(T,S2))
+isequal{T<:Union{Integer,Nucleotide2bit}}(S1::Nucleotide8bit, S2::T) = isequal(convert(T,S1),S2)
+isequal{T<:Union{Integer,Nucleotide2bit}}(S1::T, S2::Nucleotide8bit) = isequal(S1,convert(T,S2))
 
 # Hash Vector{Nucleotide8bit} as Vector{Nucleotide}
 hash(seq::Vector{Nucleotide8bit}) = hash(nucleotide(seq))
