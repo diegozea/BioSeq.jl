@@ -1,6 +1,7 @@
 BioSeq.jl
-=========
-Version 0.4.0
+=========  
+
+Version 0.4.0: [![BioSeq](http://pkg.julialang.org/badges/BioSeq_0.4.svg)](http://pkg.julialang.org/?pkg=BioSeq)   
 
 **Package for working with Nucleotides and Amino Acids on [The Julia Language](http://julialang.org/)**
 
